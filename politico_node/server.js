@@ -76,6 +76,19 @@ var insertDocuments = function(db, data,callback) {
   });
 }
 
+var findPoliticosAutocomplete = function(db, value,callback) {
+  // Get the documents collection 
+  var collection = db.collection('documents');
+  // Find some documents 
+  //console.log(value)
+  collection.find({"Nombre": {'$regex' : '.*' + value + '.*'}}).toArray(function(err, docs) {
+    assert.equal(err, null);
+    //assert.equal(2, docs.length);
+    console.log("Found the following records");
+    //console.dir(docs);
+    callback(docs);
+  });
+}
 
 
 
@@ -94,6 +107,7 @@ app.get('/', function(request, response){
 }).listen(8080)
 
 
+
 app.post('/send_political', function(request, response){
 
 	var political=request.body.search
@@ -110,12 +124,12 @@ app.post('/send_political', function(request, response){
     	console.log(msg)
 
     	MongoClient.connect(url, function(err, db) {
-		assert.equal(null, err);
-		console.log("Connected correctly to server");
-	 
-		insertDocuments(db, msg, function() {
-	    db.close();
-	  });
+			assert.equal(null, err);
+			console.log("Connected correctly to server");
+		 
+			insertDocuments(db, msg, function() {
+		    db.close();
+	  	});
 
 
 	});
@@ -126,6 +140,58 @@ app.post('/send_political', function(request, response){
 
 
 });
+
+
+app.get("/autocomplete/politicos", function (request,response) {
+	//console.log(request.query.query)
+
+	var nombre=request.query.query
+
+	var arreglo=[]
+
+	MongoClient.connect(url, function(err, db) {
+		assert.equal(null, err);
+		console.log("Connected correctly to server");
+	 
+		findPoliticosAutocomplete(db, nombre, function(result) {
+
+			console.log(result)
+
+			for(var i=0;i<result.length;i++){
+
+				console.log(result[i].Nombre)
+				console.log(String(result[i]._id))
+				obj={}
+
+				obj['data']=String(result[i]._id)
+				obj['value']=result[i].Nombre
+				arreglo.push(obj)
+
+			}
+			console.log(arreglo)
+
+			var countries=
+			{
+			    // Query is not required as of version 1.2.5
+			    "query": request.query.query,
+			    "suggestions": arreglo
+			}
+			
+
+
+			response.end(JSON.stringify(countries))
+
+		})
+
+
+	    db.close();
+	});
+
+
+	
+	
+})
+
 
 
 
