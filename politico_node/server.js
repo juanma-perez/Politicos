@@ -39,7 +39,7 @@ var MongoClient = require('mongodb').MongoClient
 
 
 
-var url = 'mongodb://localhost:27017/myproject';
+var url = 'mongodb://localhost:27017/politicos';
 
 
 app.use(bodyParser.json()); // support json encoded bodies
@@ -69,9 +69,9 @@ var insertDocuments = function(db, data,callback) {
   collection.insertMany(
     [data]   , function(err, result) {
     assert.equal(err, null);
-    assert.equal(3, result.result.n);
+    /*assert.equal(3, result.result.n);
     assert.equal(3, result.ops.length);
-    console.log("Inserted 3 documents into the document collection");
+    console.log("Inserted 3 documents into the document collection");*/
     callback(result);
   });
 }
@@ -88,9 +88,6 @@ app.get('/', function(request, response){
 	
 	//var socket = io.connect('http://localhost:5000/test', { 'forceNew': true });
 
-	
-	
-
 	response.render('index.html',context);
 
 
@@ -100,6 +97,9 @@ app.get('/', function(request, response){
 app.post('/send_political', function(request, response){
 
 	var political=request.body.search
+
+
+
 
 	socket.emit('search politician', political)
 
