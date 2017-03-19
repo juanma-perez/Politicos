@@ -1,0 +1,22 @@
+{
+  "name": "politico_node",
+  "version": "1.0.0",
+  "description": "Aplicación de Politica",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "ejs": "^2.5.6",
+    "express": "^4.14.1",
+    "jade": "^1.11.0",
+    "mongodb": "^2.2.25",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3",
+    "wikijs": "^2.0.1"
+  }
+}
