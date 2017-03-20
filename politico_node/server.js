@@ -1,66 +1,24 @@
-
-
-/*var http = require('http');
-var fs= require('fs');
-
-
-
-http.createServer(function(rquest,response){
-
-
-	var html=fs.readFile('./index.html',function(err,html){
-
-		var nombre="Romario"
-		response.write(html);
-		response.end();
-	})
-
-}).listen(8080)*/
-
-
-
-
-
-/*module.exports.parse=parse;
-parser=require("./nombre_archivo.js")
-
-var p=parser.parse
-
-p(par);*/
-
-
-
-var express=require('express')
+var express=require('express') //Import 
 var app=express();
 var socket = require('socket.io-client')('http://localhost:5000');
-var bodyParser = require('body-parser');
-var MongoClient = require('mongodb').MongoClient
-  , assert = require('assert');
+var bodyParser = require('body-parser'); //Hacer get y post desde el front 
+var MongoClient = require('mongodb').MongoClient, 
+					assert = require('assert'); //May be es errores
 
 
-
-var url = 'mongodb://localhost:27017/politicos';
+var url = 'mongodb://localhost:27017/politicos'; //con puerto por defecto 
 
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-
-
-//app.set('view engine', 'jade')
-app.set('views', __dirname + '/views');
-app.engine('html', require('ejs').renderFile);
-app.use(express.static('static'));
+app.set('views', __dirname + '/views'); //REderizar vistas
+app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
+app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
 
 //app.use(express.bodyParser());
 
 
-var options = {
-    	root: __dirname + '/static/'
-	}
-
-
-
-
+var options = { root: __dirname + '/static/'}
 
 var insertDocuments = function(db, data,callback) {
   // Get the documents collection 
@@ -69,9 +27,6 @@ var insertDocuments = function(db, data,callback) {
   collection.insertMany(
     [data]   , function(err, result) {
     assert.equal(err, null);
-    /*assert.equal(3, result.result.n);
-    assert.equal(3, result.ops.length);
-    console.log("Inserted 3 documents into the document collection");*/
     callback(result);
   });
 }
@@ -92,50 +47,31 @@ var findPoliticosAutocomplete = function(db, value,callback) {
 
 
 
-app.get('/', function(request, response){
-
-	context={}
-
-	context['nombre']=''
-
-	
-	//var socket = io.connect('http://localhost:5000/test', { 'forceNew': true });
-
-	response.render('index.html',context);
-
-
-}).listen(8080)
+app.get('/', function(request, response){ //Start the main page 
+	console.log("Conecting to Node Server...")
+	response.render('index.html');
+	console.log("Connection completed")
+}).listen(8080) 
 
 
 
 app.post('/send_political', function(request, response){
-
 	var political=request.body.search
-
-
-
-
 	socket.emit('search politician', political)
-
 	socket.on('my response', function(msg) {
 		context={}
-
     	context['nombre']=msg
     	console.log(msg)
-
     	MongoClient.connect(url, function(err, db) {
 			assert.equal(null, err);
-			console.log("Connected correctly to server");
-		 
+			console.log("Connected correctly to server");		 
 			insertDocuments(db, msg, function() {
 		    db.close();
 	  	});
 
 
 	});
-
-
-       response.render('index.html',context)
+	       response.render('index.html',context)
     });
 
 
@@ -151,7 +87,7 @@ app.get("/autocomplete/politicos", function (request,response) {
 
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		console.log("Connected correctly to server");
+		console.log("Connected correctly to MongoDB Server");
 	 
 		findPoliticosAutocomplete(db, nombre, function(result) {
 
@@ -169,16 +105,12 @@ app.get("/autocomplete/politicos", function (request,response) {
 
 			}
 			console.log(arreglo)
-
 			var countries=
 			{
 			    // Query is not required as of version 1.2.5
 			    "query": request.query.query,
 			    "suggestions": arreglo
-			}
-			
-
-
+			}			
 			response.end(JSON.stringify(countries))
 
 		})
