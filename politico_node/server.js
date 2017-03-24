@@ -20,111 +20,57 @@ app.use(express.static('static')); //Donde voy a guardar archivos estaticos (jav
 
 var options = { root: __dirname + '/static/'}
 
-var insertDocuments = function(db, data,callback) {
-  // Get the documents collection 
-  var collection = db.collection('documents');
-  // Insert some documents 
-  collection.insertMany(
-    [data]   , function(err, result) {
-    assert.equal(err, null);
-    callback(result);
-  });
-}
-
-var findPoliticosAutocomplete = function(db, value,callback) {
-  // Get the documents collection 
-  var collection = db.collection('documents');
-  // Find some documents 
-  //console.log(value)
-  collection.find({"Nombre": {'$regex' : '.*' + value + '.*'}}).toArray(function(err, docs) {
-    assert.equal(err, null);
-    //assert.equal(2, docs.length);
-    console.log("Found the following records");
-    //console.dir(docs);
-    callback(docs);
-  });
-}
-
-
-
 app.get('/', function(request, response){ //Start the main page 
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
-	console.log("Connection completed")
-}).listen(8080) 
+	console.log("Connection completed");	
+}).listen(8085) 
 
-
+function sendMongo(callback){
+	MongoClient.connect(url, function(err, db) {
+			assert.equal(null, err);
+			console.log("Se envío mensaje a mongo");
+			callback(db);
+			db.close();
+		    });
+}
 
 app.post('/send_political', function(request, response){
 	var political=request.body.search
+	context = {}
 	socket.emit('search politician', political)
 	socket.on('my response', function(msg) {
-		context={}
     	context['nombre']=msg
-    	console.log(msg)
-    	MongoClient.connect(url, function(err, db) {
-			assert.equal(null, err);
-			console.log("Connected correctly to server");		 
-			insertDocuments(db, msg, function() {
-		    db.close();
-	  	});
-
-
+    	sendMongo(function(database){
+    		database.collection("documents").insertMany([msg])
+    		console.log([msg])
+    		}
+    	);
 	});
 	       response.render('index.html',context)
     });
 
 
-});
+
 
 
 app.get("/autocomplete/politicos", function (request,response) {
-	//console.log(request.query.query)
-
 	var nombre=request.query.query
-
 	var arreglo=[]
-
-	MongoClient.connect(url, function(err, db) {
-		assert.equal(null, err);
-		console.log("Connected correctly to MongoDB Server");
-	 
-		findPoliticosAutocomplete(db, nombre, function(result) {
-
-			console.log(result)
-
-			for(var i=0;i<result.length;i++){
-
-				console.log(result[i].Nombre)
-				console.log(String(result[i]._id))
-				obj={}
-
-				obj['data']=String(result[i]._id)
-				obj['value']=result[i].Nombre
-				arreglo.push(obj)
+	 sendMongo(function (db){
+	 	db.collection('documents').find({"Nombre": {'$regex' : '.*' + nombre + '.*'}}).toArray(function(err, result) {
+    		console.log("Found the following records");
+    		for(var i=0;i<result.length;i++){
+				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 
 			}
 			console.log(arreglo)
 			var countries=
 			{
-			    // Query is not required as of version 1.2.5
 			    "query": request.query.query,
 			    "suggestions": arreglo
 			}			
 			response.end(JSON.stringify(countries))
-
-		})
-
-
-	    db.close();
-	});
-
-
-	
-	
+ 		});
+	})	
 })
-
-
-
-
-
