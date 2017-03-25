@@ -29,6 +29,7 @@ function sendMongo(callback){
 			assert.equal(null, err);
 			console.log("Se envío mensaje a mongo");
 			callback(db);
+			console.log(err)
 			db.close();
 		    });
 }
@@ -39,6 +40,7 @@ app.post('/send_political', function(request, response){
 	socket.emit('search politician', political)
 	socket.on('my response', function(msg) {
     	context['nombre']=msg
+    	console.log("Funciona el socket")
     	sendMongo(function(database){
     		database.collection("documents").insertMany([msg])
     		console.log([msg])
@@ -52,12 +54,11 @@ app.get("/autocomplete/politicos", function (request,response) {
 	var nombre=request.query.query
 	var arreglo=[]
 	 sendMongo(function (db){
-	 	db.collection('documents').find({"Nombre": {'$regex' : '.*' + nombre + '.*'}}).toArray(function(err, result) {
-    		console.log("Found the following records");
+	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
+	 		console.log({"Nombre": {"$in": [/nombre/i] } })
     		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
 			}
-			console.log(arreglo)
 			response.end(
 				JSON.stringify({"query": request.query.query,"suggestions": arreglo})
 			)
