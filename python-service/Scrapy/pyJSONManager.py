@@ -9,6 +9,7 @@ class JSONManager:
         self.table =self.page.getTable()
 
     def clearValue(self,sentence):
+
         temp = sentence.split("\n")
         if len(temp)==1:
             return temp[0]
@@ -18,11 +19,14 @@ class JSONManager:
             else:
                 return temp
 
+    def eliminateCharacters(self, cadena):
+        d={'.':'',';':''}
+        return ''.join(d[s] if s in d else s for s in cadena)
+
     def addValue(self,dictionary,name,value):
+        name = self.eliminateCharacters(name)
     	dictionary[name]=value
     	return dictionary #Return the dictionary with a new value
-
-   
     
     def scrapeTable(self):
         dic={}
@@ -39,9 +43,9 @@ class JSONManager:
                 dic=self.addValue(dic,parent,{})
             elif len(fil.find_all('th'))>0 and len(fil.find_all('td'))>0:
                 if parent != "":
-                    temp = dic[parent]
+                    temp = dic[self.eliminateCharacters(parent)]
                     temp = self.addValue(temp,fil.find_all('th')[0].text, self.clearValue(fil.find_all('td')[0].text))
-                    dic[parent] = temp
+                    dic[self.eliminateCharacters(parent)] = temp
                 else:
                      self.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)    	
         return dic
@@ -55,3 +59,7 @@ class JSONManager:
     	except IOError:
     		open(name,'w')
     		escribirArchivo(name, linea)
+
+a = JSONManager("Juan Manuel Santos")
+aaa = a.scrapeTable()
+print(aaa)
