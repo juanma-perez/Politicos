@@ -1,0 +1,12 @@
+{
+	"mongo":{
+		"host":"localhost",
+		"port":27017,
+		"database":"politicos",
+		"collections":"personajes"
+	},
+	"node":{
+		"port":8080
+
+	}
+}

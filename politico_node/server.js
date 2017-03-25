@@ -4,10 +4,7 @@ var socket = require('socket.io-client')('http://localhost:5000');
 var bodyParser = require('body-parser'); //Hacer get y post desde el front 
 var MongoClient = require('mongodb').MongoClient, 
 					assert = require('assert'); //May be es errores
-
-
-var url = 'mongodb://localhost:27017/politicos'; //con puerto por defecto 
-
+var properties = require('./properties.json')
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -23,10 +20,11 @@ var options = { root: __dirname + '/static/'}
 app.get('/', function(request, response){ //Start the main page 
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
-	console.log("Connection completed");	
-}).listen(8085) 
+	console.log("Connection completed");
+}).listen(properties.node.port) 
 
 function sendMongo(callback){
+	var url = 'mongodb://' + properties.mongo.host+':'+properties.mongo.port+'/'+properties.mongo.database;
 	MongoClient.connect(url, function(err, db) {
 			assert.equal(null, err);
 			console.log("Se envío mensaje a mongo");
@@ -50,10 +48,6 @@ app.post('/send_political', function(request, response){
 	       response.render('index.html',context)
     });
 
-
-
-
-
 app.get("/autocomplete/politicos", function (request,response) {
 	var nombre=request.query.query
 	var arreglo=[]
@@ -62,15 +56,11 @@ app.get("/autocomplete/politicos", function (request,response) {
     		console.log("Found the following records");
     		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
-
 			}
 			console.log(arreglo)
-			var countries=
-			{
-			    "query": request.query.query,
-			    "suggestions": arreglo
-			}			
-			response.end(JSON.stringify(countries))
+			response.end(
+				JSON.stringify({"query": request.query.query,"suggestions": arreglo})
+			)
  		});
-	})	
+	})
 })
