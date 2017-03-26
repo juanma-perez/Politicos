@@ -5,8 +5,12 @@
 		"database":"politicos",
 		"collections":"personajes"
 	},
+	"redis":{
+		"host":"localhost",
+		"port":6379
+	},
 	"node":{
-		"port":8080
+		"port":8082
 
 	}
 }
