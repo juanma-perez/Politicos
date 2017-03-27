@@ -1,0 +1,263 @@
+
+<!--!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<% political_list.forEach(function(political) { %>
+
+        <li><%= political.nombre %> - <%= political.id %></li>
+    <% }); %>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+
+<html-->
+
+
+<!--prueba de comentario-->
+
+	<head>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css">
+
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+		
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.3.0/jquery.autocomplete.js"></script>
+
+		
+	<style>
+		.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+		.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+		.autocomplete-selected { background: #F0F0F0; }
+		.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+		.autocomplete-group { padding: 2px 5px; }
+		.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+
+		.avatar{
+					/* cambia estos dos valores para definir el tamaño de tu círculo */  
+		    width:150px;
+		    height:150px;
+		    border-radius:800px;
+		    border:3px solid white;
+		    margin-top:20px;
+
+		}
+
+		.political-thumbnail{
+			background: rgba(255,255,255,0); 
+			border-radius:0px; 
+			margin-top: 50px; 
+		    border: 20px solid rgba(0, 0, 0, 0);
+		}
+
+		.btn-thumbnail{
+			display: block;
+			border-radius: 100%;
+			background-color: #222;
+			height: 40px;
+			width: 40px;
+			border: rgba(0, 0, 0, 1);
+			font-size: 20px;
+			text-align:  center;
+			cursor: pointer;
+		    color: #fff;
+		    outline: 0;
+		    -webkit-transition: all .3s;
+		    -moz-transition: all .3s;
+		    transition: all .3s; 
+			}
+		.btn-thumbnail:hover { 
+    		background-color: #31708f;
+    		color: white;
+    	}
+    	.political-thumbnail:hover{
+    		background-color: rgba(19,44,56, 0.4); 
+
+			
+			
+    	}
+	}
+	    
+
+	</style>
+
+	</head>
+
+	<script>
+
+	$(document).ready(function() {
+		$('#autocomplete').autocomplete({
+		    serviceUrl: '/autocomplete/politicos',
+
+		    onSelect: function (suggestion) {
+		        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+		    },
+		    onSearchComplete: function (query, suggestions) {
+
+
+		    },
+		    minChars:3
+
+		});
+
+		$("#search_submit").on("click", function(e){
+		    e.preventDefault();
+		    $('#loginformA').attr('action', "/search/person:"+$("#autocomplete").val()).submit();
+		});
+	});
+
+
+	
+	
+	</script>
+
+	
+
+	<body style="background-image: url('http://www.digitalcraft.ro/wp-content/uploads/2016/08/background-1.jpg')">
+
+		
+
+		<!--nav class="navbar navbar-inverse" style=" border-radius: 0 !important; opacity:0.9 !important; border: 0.5px solid rgba(0, 0, 0, .5);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box;">
+			<div class="container-fluid">
+				<div class="navbar-header">
+
+				  <a class="navbar-brand" href="#">
+				     Pagina Principal <i class="glyphicon glyphicon-briefcase"></i> 
+				  </a>
+
+				</div>
+
+
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			      <ul class="nav navbar-nav">
+			        <li class="active"><a href="#">Nuestras Busquedas <span class="sr-only">(current)</span></a></li>
+			        <li><a href="#">Nosotros</a></li>
+			        <li><a href="#">Contacto</a></li>
+			        <li><a href="#">Como Funciona</a></li>
+			        <li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+			          <ul class="dropdown-menu">
+			            <li><a href="#">Action</a></li>
+			            <li><a href="#">Another action</a></li>
+			            <li><a href="#">Something else here</a></li>
+			            <li role="separator" class="divider"></li>
+			            <li><a href="#">Separated link</a></li>
+			            <li role="separator" class="divider"></li>
+			            <li><a href="#">One more separated link</a></li>
+			          </ul>
+			        </li>
+			      </ul>
+			      
+			      
+			    </div>
+			</div>
+		</nav-->
+
+		
+
+			<div class="panel panel-default" style="background: rgba(255,255,255,0.7); border-radius:0px" align="center">
+			  <div class="panel-body">
+			   
+			  	
+				  
+				<div class="col-md-12 row">
+
+					<div class="col-md-2">
+			  			<img src="/logo2.png" style="height: 50px; width: 120px">
+			  		</div>
+
+			  		<div class="col-md-10">
+
+						<form id="loginformA" action="" method="get">
+						    <div class="input-group" style="margin-top: 8px">
+						    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." value="<%= search %>" style="border-radius:0px"/>
+						      
+						    	
+
+						      <span class="input-group-btn">
+						        <button class="btn btn-success" id="search_submit" type="button"><i class="glyphicon glyphicon-search" style="border-radius:0px"></i></button>
+						      </span>
+						    </div><!-- /input-group -->
+					    </form>
+					</div>
+				</div><!-- /.col-lg-6 -->
+
+				<div class="container row">
+
+			
+					<div class="row">
+
+					  <div class="col-sm-6 col-md-3">
+					    <div class="thumbnail political-thumbnail">
+
+					    	
+					      	<img class="avatar" src="http://www.biografiasyvidas.com/biografia/s/fotos/santos_juan_manuel.jpg" style="height: 150px; width: 150px;">
+
+					      	
+
+					      <div class="caption">
+					        <h3><strong>Juan Manuel Santos</strong></h3>
+					        <p><strong> Nacionalidad:</strong> Colombiano</p>
+					        <ul class="list-inline">
+					        	<li>
+					        <a class="btn-thumbnail"><i class="fa fa-twitter fa-fw" style="margin-top: 10px;"></i></a> </li>
+					        <li><a class="btn-thumbnail"><i class="fa fa-wikipedia-w" style="margin-top:10px;" ></i></a></li>
+					        </ul>
+					      </div>
+					    </div>
+					  </div>
+					
+
+
+					  <div class="col-sm-6 col-md-3">
+					    <div class="thumbnail political-thumbnail">
+
+					    	
+					      		<img class="avatar" src="http://www.biografiasyvidas.com/biografia/s/fotos/santos_juan_manuel.jpg" style="height: 150px; width: 150px; ">
+
+					      	
+
+					      <div class="caption">
+					        <h3>Thumbnail label</h3>
+					        <p>...</p>
+					        <p><a href="#" class="btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+					      </div>
+					    </div>
+					  </div>
+
+
+
+					</div>
+				</div>
+				
+
+				</div><!-- /.row -->
+			</div>
+
+			
+			
+		
+		</div>
+
+	</body>
+
+</html>
+

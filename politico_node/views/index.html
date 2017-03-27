@@ -36,13 +36,30 @@
 	<script>
 
 	$(document).ready(function() {
+
 		$('#autocomplete').autocomplete({
 		    serviceUrl: '/autocomplete/politicos',
+
 		    onSelect: function (suggestion) {
-		        alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-		    }
+		        //alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+		    },
+		    onSearchComplete: function (query, suggestions) {
+
+
+		    },
+		    minChars:3
+
 		});
-	});
+
+		$("#search_submit").on("click", function(e){
+		    e.preventDefault();
+		    $('#loginformA').attr('action', "/search/person:"+$("#autocomplete").val()).submit();
+		});
+
+
+	})
+
+	
 	
 	</script>
 
@@ -103,14 +120,14 @@
 
 				<div class="col-md-12">
 
-					<form id="loginformA" action="/send_political" method="post">
+					<form id="loginformA" action="" method="get">
 					    <div class="input-group" style="margin-top:50px;">
 					    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." style="border-radius:0px"/>
 					      
 					    	
 
 					      <span class="input-group-btn">
-					        <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search" style="border-radius:0px"></i></button>
+					        <button class="btn btn-success" id="search_submit" type="button"><i class="glyphicon glyphicon-search" style="border-radius:0px"></i></button>
 					      </span>
 					    </div><!-- /input-group -->
 				    </form>

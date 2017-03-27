@@ -27,11 +27,12 @@ function testRedis(redisClient){
 }
 
 var options = { root: __dirname + '/static/'}
+
 app.get('/', function(request, response){ //Start the main page 
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	sendRedis(testRedis);
+	//sendRedis(testRedis);
 }).listen(properties.node.port) 
 
 function sendMongo(callback){
@@ -59,8 +60,13 @@ function sendRedis(callback){
 	redisClient.quit();
 }
 
+app.use(express.static('static')); 
+
 app.post('/send_political', function(request, response){
-	var political=request.body.search
+
+	var political=request.body.politico
+
+	
 	context = {}
 	socket.emit('search politician', political)
 	socket.on('my response', function(msg) {
@@ -74,10 +80,42 @@ app.post('/send_political', function(request, response){
 	       response.render('index.html',context)
     });
 
+app.get('/search/person:*', function(request, response){
+
+	var political=request.query.search
+	console.log(request.query.search)
+	
+	context = {}
+	list_political=[]
+
+	sendMongo(function (db){
+	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
+	 		console.log({"Nombre": {"$in": [/nombre/i] } })
+
+    		for(var i=0;i<result.length;i++){
+
+				list_political.push(
+					{'id':String(result[i]._id),
+					 'nombre':result[i].Nombre,
+					 'foto': result[i].Foto,
+					})
+			}
+
+			context['political_list']=list_political
+			context['search']=request.query.search
+
+			response.render('search_political.html',context)
+ 		});
+	})
+
+    });
+
+
 app.get("/autocomplete/politicos", function (request,response) {
 	var nombre=request.query.query
 	var arreglo=[]
-	 sendMongo(function (db){
+
+	sendMongo(function (db){
 	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
 	 		console.log({"Nombre": {"$in": [/nombre/i] } })
     		for(var i=0;i<result.length;i++){
