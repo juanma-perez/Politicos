@@ -1,14 +1,24 @@
 import pyWiki
 
-class Searcher:
+class Searcher:       
+
     def doSearch(self,search):
-        temp = []
-        for person in pyWiki.doSearch(search):
-            categories = pyWiki.getCategories(pyWiki.getPage(person))
-            for item in categories:
-                if self.categories().has_key(item):
-                    temp += [person]
-        return temp
-    
-    def categories(self):
-        return {u"Categor\u00eda:Hombres":""}
+        dic = {}
+        cont = 1
+        cont2 = 1
+        for item in pyWiki.doSearch(search):
+            cont2 +=1
+            try:
+                dic[cont] = pyWiki.getPageData(item)
+                cont+=1
+            except Exception as error:
+                print ".................................................."
+                print item.encode('utf-8').strip()
+                print ".................................................."
+            
+        print cont
+        print cont2
+        return dic
+
+a = Searcher()
+print a.doSearch("Juan Manuel Santos")

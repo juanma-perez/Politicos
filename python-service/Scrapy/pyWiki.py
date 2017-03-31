@@ -1,4 +1,6 @@
 import wikipedia
+from wptools import wptools 
+
 # -*- coding: utf-8 -*-
 wikipedia.set_lang("es")
 
@@ -10,3 +12,11 @@ def doSearch(search):
 	
 def getCategories(page):
     return page.categories #Get the categories of a page from Wikipedia
+
+def getPageData(search):
+	dic ={}
+	page = wptools.page(search).get_query()
+	dic["Title"]= page.title
+	dic["Url"]= page.url
+	dic["Imagen"]= page.image('page')['url']
+	return dic
