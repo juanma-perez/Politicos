@@ -1,7 +1,7 @@
 import json
 import time
 from pyScraper import Scraper
-import pyWiki
+from pyWiki import getPageData
 from FileManager import FileManager
 # -*- coding: utf-8 -*-
 
@@ -9,9 +9,11 @@ class JSONManager:
     def __init__(self, search):
         self.fileManager = FileManager()
         self.page = None
+        self.search=search
         try:
             self.page = Scraper(search)            
             self.table =self.page.getTable()
+            #self.dict_photo= pyWiki.getPageData(search)
         except Exception as error:
             self.fileManager.recordError(str(error))
         
@@ -41,10 +43,9 @@ class JSONManager:
             if self.page is not None:
                 dic = self.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
                 dic = self.addValue(dic,"Nombre",self.page.getTitle())
-                if  len(self.table.find_all('a'))>0:
-                    dic = self.addValue(dic,"Foto","https://es.wikipedia.org" + self.table.find_all('a')[0].get('href'))
-                else:
-                    dic = self.addValue(dic,"Foto","Imagen no encontrada")
+                
+                dic = self.addValue(dic,"Foto", getPageData(self.search).get('Imagen'))
+                
                 filas = self.table.find_all('tr')[2:]
                 parent = ""
                 for fil in filas:

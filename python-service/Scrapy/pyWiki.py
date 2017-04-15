@@ -18,5 +18,10 @@ def getPageData(search):
 	page = wptools.page(search).get_query()
 	dic["Title"]= page.title
 	dic["Url"]= page.url
-	dic["Imagen"]= page.image('page')['url']
+	try:
+		dic["Imagen"]= page.image('page')['url']
+
+	except Exception as error:
+		dic["Imagen"]='No_Disponible'
+
 	return dic

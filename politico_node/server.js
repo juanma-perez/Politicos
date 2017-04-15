@@ -62,9 +62,9 @@ function sendRedis(callback){
 
 app.use(express.static('static')); 
 
-app.post('/send_political', function(request, response){
+app.get('/send_political', function(request, response){
 
-	var political=request.body.politico
+	var political="Ernesto Samper"
 
 	
 	context = {}
@@ -72,7 +72,7 @@ app.post('/send_political', function(request, response){
 	socket.on('my response', function(msg) {
     	context['nombre']=msg
     	sendMongo(function(database){
-    		database.collection("documents").insertMany([msg])
+    		database.collection(properties.mongo.collections).insertMany([msg])
     		console.log([msg])
     		}
     	);
@@ -89,16 +89,69 @@ app.get('/search/person:*', function(request, response){
 	list_political=[]
 
 	sendMongo(function (db){
-	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
 	 		console.log({"Nombre": {"$in": [/nombre/i] } })
 
     		for(var i=0;i<result.length;i++){
 
-				list_political.push(
-					{'id':String(result[i]._id),
-					 'nombre':result[i].Nombre,
-					 'foto': result[i].Foto,
-					})
+    			dict_personaje={}
+
+    			dict_personaje['id']=result[i]._id
+
+    			if(result[i].Nombre){
+
+    				dict_personaje['nombre']=result[i].Nombre
+    			}else{
+    				dict_personaje['nombre']=''
+    			}
+
+    			if(result[i].Foto != 'No_Disponible' ){
+    				dict_personaje['foto']=result[i].Foto
+
+    			}else{
+    				dict_personaje['foto']='/images/hombre.png'
+    			}
+
+    			if (result[i]['Información personal']){
+	    			if(result[i]['Información personal']['Nacionalidad']){
+	    				dict_personaje['nacionalidad']=result[i]['Información personal']['Nacionalidad']
+
+	    			}else{
+	    				dict_personaje['nacionalidad']=''
+	    			}
+	    			if(result[i]['Información personal']['Nacimiento']){
+	    				dict_personaje['nacimiento']=result[i]['Información personal']['Nacimiento'][0]
+
+	    			}else{
+	    				dict_personaje['nacimiento']=''
+	    			}
+
+	    			if(result[i]['Información personal']['Residencia']){
+	    				dict_personaje['residencia']=result[i]['Información personal']['Residencia']
+
+	    			}else{
+	    				dict_personaje['residencia']=''
+	    			}
+    			}else{
+    				dict_personaje['nacionalidad']=''
+    				dict_personaje['nacimiento']=''
+    				dict_personaje['residencia']=''
+    			}
+   	
+    			
+				if(result[i]['Información profesional']){
+					if(result[i]['Información profesional']['Ocupación']){
+	    				dict_personaje['ocupacion']=result[i]['Información profesional']['Ocupación']
+	    			}else{
+	    				dict_personaje['ocupacion']=''
+	    			}
+				}else{
+					dict_personaje['ocupacion']=''
+				}	
+
+    			
+
+				list_political.push(dict_personaje)
 			}
 
 			context['political_list']=list_political
@@ -116,7 +169,7 @@ app.get("/autocomplete/politicos", function (request,response) {
 	var arreglo=[]
 
 	sendMongo(function (db){
-	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
+	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
 	 		console.log({"Nombre": {"$in": [/nombre/i] } })
     		for(var i=0;i<result.length;i++){
 				arreglo.push({'data':String(result[i]._id),'value':result[i].Nombre})
