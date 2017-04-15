@@ -89,7 +89,7 @@ app.get('/search/person:*', function(request, response){
 
 	context = {}
 	list_political=[]
-	quantity_characters=8
+	quantity_characters=9
 	initial=0
 	page=1
 
