@@ -140,10 +140,10 @@
 
 		});
 
-		$("#search_submit").on("click", function(e){
+		/*$("#search_submit").on("click", function(e){
 		    e.preventDefault();
 		    $('#loginformA').attr('action', "/search/person:"+$("#autocomplete").val()).submit();
-		});
+		});*/
 
 		var grid=$('.grid').masonry({
 		  // options
@@ -151,35 +151,13 @@
 		  
 		});
 
-		pageSize = 3;
-
-	/*showPage = function(page) {
-	    $(".grid-item").hide();
-	    $(".grid-item").each(function(n) {
-	        if (n >= pageSize * (page - 1) && n < pageSize * page){
-
-	            $(this).show();
-	        	
-	        }
-	    });        
-	}
-	    
-	showPage(1);
-
-	$("#pagin li a").click(function() {
-	    $("#pagin li a").removeClass("current");
-	    $(this).addClass("current");
-	    showPage(parseInt($(this).text())) 
-	});*/
+		
 
 
 	});
 
 
-	
 
-		
-	
 	</script>
 
 	
@@ -189,25 +167,21 @@
 			<nav class="navbar navbar-default navbar-fixed-top no-border nav-shadow">
 			  	<div class="container-fluid">
 			    	<div class="navbar-header" style="margin-top: 30px; margin-bottom: 30px">
-				    	<div class="col-md-2">
-				    			
-						        <i class="fa fa-coffee fa-3x pull-right"></i>
-						    
-						</div>
+				    	
 					  		
 					  	
-				      	<div class="col-md-10">
+				      	<div class="col-md-12">
 
-							<form id="loginformA" action="" method="get">
+							<form id="loginformA" action="/search/person:political" method="get">
 							    <div class="input-group" >
 							    	<input type="text" name="search" id="autocomplete" class="form-control" placeholder="Buscar..." value="<%= search %>" style="border-radius:0px"/>
 							      
 							    	
 
 							      <span class="input-group-btn">
-							        <button class="btn btn-success no-border" id="search_submit" type="button"><i class="glyphicon glyphicon-search"></i></button>
+							        <button class="btn btn-success no-border" id="search_submit" type="submit"><i class="glyphicon glyphicon-search"></i></button>
 							      </span>
-							    </div><!-- /input-group -->
+							    </div>
 						    </form>
 						</div>
 			        
@@ -226,7 +200,7 @@
 
 
 
-							<div class="grid">
+							<div class="grid" id="grid_id">
 							<% political_list.forEach(function(political) { %>
 
 								
@@ -266,25 +240,35 @@
 						  	
 						  </div>
 
-						<nav aria-label="Page navigation">
-							  <ul class="pagination" id="pagin">
-							    <!--li>
-							      <a href="#" aria-label="Previous">
+						<nav aria-label="Page navigation no-border">
+							  <ul class="pagination no-border" id="pagin">
+							  	
+							    <li>
+							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
 							        <span aria-hidden="true">&laquo;</span>
 							      </a>
-							    </li-->
-							    <li><a href="#">1</a></li>
-							    <li><a href="#">2</a></li>
-							    <li><a href="#">3</a></li>
-							    <li><a href="#">4</a></li>
-							    <li><a href="#">5</a></li>
-							    <!--li>
-							      <a href="#" aria-label="Next">
+							    </li>
+							    
+							    <% for( i=1;i<=num_pages;i++){ %>
+
+							    	<% if (page == i){ %>
+								    	<li  style="border-radius: 0px" class="active no-border" ><a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a></li>
+								    
+								    
+							    	<% } else{ %>
+								    	<li class="no-border"><a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a></li>
+
+
+
+									<% } %>
+								<% } %>
+								<li>
+							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
 							        <span aria-hidden="true">&raquo;</span>
 							      </a>
-							    </li-->
+							    </li>
 							  </ul>
-						</nav
+						</nav>
 
 						  	
 

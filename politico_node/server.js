@@ -64,7 +64,7 @@ app.use(express.static('static'));
 
 app.get('/send_political', function(request, response){
 
-	var political="Ernesto Samper"
+	var political="Gustavo Rojas Pinilla"
 
 	
 	context = {}
@@ -85,14 +85,56 @@ app.get('/search/person:*', function(request, response){
 	var political=request.query.search
 	console.log(request.query.search)
 	
+
+
 	context = {}
 	list_political=[]
+	quantity_characters=8
+	initial=0
+	page=1
+
+	
+
+
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
-	 		console.log({"Nombre": {"$in": [/nombre/i] } })
+	 		console.log(result)
 
-    		for(var i=0;i<result.length;i++){
+	 		num_pages=Math.ceil(result.length/quantity_characters)
+
+	 		if(request.query.page){
+
+	 			if(request.query.page<1){
+					page=1
+					initial=quantity_characters*(parseInt(page)-1)
+
+				}else if(request.query.page>num_pages){
+					page=num_pages
+					initial=quantity_characters*(parseInt(page)-1)
+				}else{
+					page=request.query.page
+					initial=quantity_characters*(parseInt(page)-1)
+				}
+
+				
+		
+
+			}else{
+
+				initial=0
+			}
+
+
+	 		if (result.length>(quantity_characters*page)){
+	 			len=quantity_characters*page
+	 		}else{
+	 			len=result.length
+	 		}
+
+	 
+	 		
+    		for(var i=initial;i<len;i++){
 
     			dict_personaje={}
 
@@ -156,6 +198,8 @@ app.get('/search/person:*', function(request, response){
 
 			context['political_list']=list_political
 			context['search']=request.query.search
+			context['num_pages']=num_pages
+			context['current_page']=page
 
 			response.render('search_political.html',context)
  		});
@@ -180,3 +224,7 @@ app.get("/autocomplete/politicos", function (request,response) {
  		});
 	})
 })
+
+
+
+
