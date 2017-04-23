@@ -7,8 +7,6 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 
-
-
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.set('views', __dirname + '/views'); //REderizar vistas
@@ -32,7 +30,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	//sendRedis(testRedis);
+	sendRedis(testRedis);
 }).listen(properties.node.port) 
 
 function sendMongo(callback){
@@ -81,26 +79,21 @@ app.post('/send_political', function(request, response){
     });
 
 app.get('/search/person:*', function(request, response){
-
 	var political=request.query.search
 	console.log(request.query.search)
 	
 	context = {}
 	list_political=[]
-
 	sendMongo(function (db){
 	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
 	 		console.log({"Nombre": {"$in": [/nombre/i] } })
-
     		for(var i=0;i<result.length;i++){
-
 				list_political.push(
 					{'id':String(result[i]._id),
 					 'nombre':result[i].Nombre,
 					 'foto': result[i].Foto,
 					})
 			}
-
 			context['political_list']=list_political
 			context['search']=request.query.search
 
@@ -112,9 +105,8 @@ app.get('/search/person:*', function(request, response){
 
 
 app.get("/autocomplete/politicos", function (request,response) {
-	var nombre=request.query.query
+	var nombre=request.query.queryl
 	var arreglo=[]
-
 	sendMongo(function (db){
 	 	db.collection('documents').find({"Nombre": {"$in": [new RegExp(nombre, "i") ]} }).toArray(function(err, result) {
 	 		console.log({"Nombre": {"$in": [/nombre/i] } })
