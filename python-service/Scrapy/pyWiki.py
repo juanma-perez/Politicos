@@ -17,6 +17,7 @@ def getCategories(page):
 
 def getPageData(search):
 	dic ={}
+<<<<<<< HEAD
 	try:
 		page = wptools.page(search).get_query()
 		dic["Title"]= page.title
@@ -30,5 +31,16 @@ def getPageData(search):
 		dic["Url"]=page.url		
 		dic["Imagen"]= "Imagen no disponible"
 		dic["Categorias"] = getCategories(page)
+=======
+	page = wptools.page(search).get_query()
+	dic["Title"]= page.title
+	dic["Url"]= page.url
+	try:
+		dic["Imagen"]= page.image('page')['url']
+
+	except Exception as error:
+		dic["Imagen"]='No_Disponible'
+
+>>>>>>> e1a0e3167f00aa39d871dfd367dcde208df25042
 	return dic
 		
