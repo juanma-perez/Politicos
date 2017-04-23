@@ -1,5 +1,7 @@
 import wikipedia
 from wptools import wptools 
+import urllib
+import urllib2
 
 # -*- coding: utf-8 -*-
 wikipedia.set_lang("es")
@@ -15,8 +17,18 @@ def getCategories(page):
 
 def getPageData(search):
 	dic ={}
-	page = wptools.page(search).get_query()
-	dic["Title"]= page.title
-	dic["Url"]= page.url
-	dic["Imagen"]= page.image('page')['url']
+	try:
+		page = wptools.page(search).get_query()
+		dic["Title"]= page.title
+		dic["Url"]= page.url
+		dic["Imagen"]= page.image('page')['url']
+		print "----->Categorias:"
+		page 
+	except Exception as error:
+		dic["Title"]=search
+		page =  getPage(search)
+		dic["Url"]=page.url		
+		dic["Imagen"]= "Imagen no disponible"
+		dic["Categorias"] = getCategories(page)
 	return dic
+		
