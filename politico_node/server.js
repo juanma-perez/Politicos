@@ -7,8 +7,6 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 
-
-
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.set('views', __dirname + '/views'); //REderizar vistas
@@ -26,6 +24,12 @@ function testRedis(redisClient){
 		})
 }
 
+function getSetRedis(redisClient,query,callback){
+	redisClient.smembers(query, function(err,result){
+		callback(result)
+	})
+}
+
 var options = { root: __dirname + '/static/'}
 
 app.get('/', function(request, response){ //Start the main page 
@@ -33,6 +37,9 @@ app.get('/', function(request, response){ //Start the main page
 	response.render('index.html');
 	console.log("Connection completed");
 	//sendRedis(testRedis);
+	//sendRedis(function(redisClient){
+	//	getSetRedis(redisClient,"nodos:Lugar", function(result){console.log(result)})
+	//})
 }).listen(properties.node.port) 
 
 function sendMongo(callback){
@@ -51,11 +58,9 @@ function sendMongo(callback){
 }
 function sendRedis(callback){	
 	var redisClient = redis.createClient(properties.redis.port, properties.redis.host)
-	console.log("Conectandose a redis")
 	redisClient.on('error',function(error){
 		console.log("Se presentó un error con redis")
 	})
-	console.log("Se envío mensaje a redis")
 	callback(redisClient)
 	redisClient.quit();
 }
@@ -64,7 +69,7 @@ app.use(express.static('static'));
 
 app.get('/send_political', function(request, response){
 
-	var political="Ernesto Samper"
+	var political="Gustavo Rojas Pinilla"
 
 	
 	context = {}
@@ -84,15 +89,51 @@ app.get('/search/person:*', function(request, response){
 
 	var political=request.query.search
 	console.log(request.query.search)
-	
+
 	context = {}
 	list_political=[]
+	quantity_characters=8
+	initial=0
+	page=1
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
-	 		console.log({"Nombre": {"$in": [/nombre/i] } })
+	 		console.log(result)
 
-    		for(var i=0;i<result.length;i++){
+	 		num_pages=Math.ceil(result.length/quantity_characters)
+
+	 		if(request.query.page){
+
+	 			if(request.query.page<1){
+					page=1
+					initial=quantity_characters*(parseInt(page)-1)
+
+				}else if(request.query.page>num_pages){
+					page=num_pages
+					initial=quantity_characters*(parseInt(page)-1)
+				}else{
+					page=request.query.page
+					initial=quantity_characters*(parseInt(page)-1)
+				}
+
+				
+		
+
+			}else{
+
+				initial=0
+			}
+
+
+	 		if (result.length>(quantity_characters*page)){
+	 			len=quantity_characters*page
+	 		}else{
+	 			len=result.length
+	 		}
+
+	 
+	 		
+    		for(var i=initial;i<len;i++){
 
     			dict_personaje={}
 
@@ -156,6 +197,8 @@ app.get('/search/person:*', function(request, response){
 
 			context['political_list']=list_political
 			context['search']=request.query.search
+			context['num_pages']=num_pages
+			context['current_page']=page
 
 			response.render('search_political.html',context)
  		});

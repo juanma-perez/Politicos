@@ -275,14 +275,15 @@ class WPTools(object):
         returns API reponse from cache or raises ValueError
         """
         try:
-            query = self.cache[action]['query'].replace('&format=json', '')
+            #query = self.cache[action]['query'].replace('&format=json', '')
+            query = ""
             data = utils.json_loads(self.cache[action]['response'])
-
+            
             if action == 'parse' and not data.get('parse'):
                 raise LookupError
 
             if action == 'query':
-                if [x for x in data['query']['pages'] if x.get('missing')]:
+              if [x for x in data['query']['pages'] if x.get('missing')]:
                     raise LookupError
 
             if action == 'wikidata' and '-1' in data.get('entities'):
@@ -332,7 +333,7 @@ class WPTools(object):
             try:
                 title = quote(self.title)
             except KeyError:
-                title = quote(self.title.encode('utf-8'))
+                title = quote(self.tfitle.encode('utf-8'))
             return _fetch.query('/page/mobile-text/', title)
 
         elif action == 'claims':

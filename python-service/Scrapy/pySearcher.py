@@ -9,16 +9,13 @@ class Searcher:
         for item in pyWiki.doSearch(search):
             cont2 +=1
             try:
-                dic[cont] = pyWiki.getPageData(item)
+                dic[str(cont)] = pyWiki.getPageData(item)
                 cont+=1
             except Exception as error:
-                print ".................................................."
-                print item.encode('utf-8').strip()
-                print ".................................................."
-            
+                pass        
         print cont
         print cont2
         return dic
 
 a = Searcher()
-print a.doSearch("Juan Manuel Santos")
+print a.doSearch("Alvaro Uribe Velez")
