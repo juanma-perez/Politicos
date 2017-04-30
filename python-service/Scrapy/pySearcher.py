@@ -3,19 +3,13 @@ import pyWiki
 class Searcher:       
 
     def doSearch(self,search):
-        dic = {}
-        cont = 1
-        cont2 = 1
-        for item in pyWiki.doSearch(search):
-            cont2 +=1
+        list = []
+        for item in pyWiki.doSearch(search):            
             try:
-                dic[str(cont)] = pyWiki.getPageData(item)
-                cont+=1
+                list.append(pyWiki.getPageData(item))                
             except Exception as error:
-                pass        
-        print cont
-        print cont2
-        return dic
+                pass                
+        return list
 
 a = Searcher()
 print a.doSearch("Alvaro Uribe Velez")
