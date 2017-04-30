@@ -51,24 +51,34 @@
 		.autocomplete-group { padding: 2px 5px; }
 		.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 
-		.avatar{
+		.avatar {
 					/* cambia estos dos valores para definir el tamaño de tu círculo */  
-		    width:150px;
-		    height:150px;
-		    border-radius:800px;
+		    width:120px;
+		    height:120px;
+		    border-radius:100%;
 		    border:3px solid white;
-		    margin-top:20px;
-
+		    
+		    
 		}
+		
 
 		.political-thumbnail{
 			background: rgba(255,255,255,0); 
 			border-radius:0px; 
 			
 		    border: 20px solid rgba(0, 0, 0, 0);
+		    margin: 8px;
+		    flex-direction: column;
+
+		    -webkit-box-shadow: 0 8px 6px -6px #999 !important;
+            -moz-box-shadow: 0 8px 6px -6px #999 !important;
+			box-shadow: 0 4px 8px 0px #999 !important;
+
+
 		}
 
 		.btn-thumbnail{
+
 			display: block;
 			border-radius: 100%;
 			background-color: #222;
@@ -83,16 +93,21 @@
 		    -webkit-transition: all .3s;
 		    -moz-transition: all .3s;
 		    transition: all .3s; 
+
 			}
 		.btn-thumbnail:hover { 
-    		background-color: #31708f;
+    		background-color: #148f76;
     		color: white;
     	}
     	.political-thumbnail:hover{
 <<<<<<< HEAD
+    		background-color: rgba(62,75,88, 0.7); 
+=======
+<<<<<<< HEAD
     		background-color: rgba(19,44,56, 0.4); 		
 =======
     		background-color: rgba(19,44,56, 0.7); 
+>>>>>>> f2d676de167a39d5c744466183f7fc8120568539
 
 			
 >>>>>>> e1a0e3167f00aa39d871dfd367dcde208df25042
@@ -119,9 +134,82 @@
 		}
 		
 		.grid-item{
-			width: 280px
+			width: 360px
+		}
+
+		.btn-site{
+			background-color: #1ab394;
+			border-color: #1ab394;
+			color: #FFFFFF;
+
+		}
+
+		.btn-site:hover{
+			background-color: #148f76;
+			border-color: #148f76;
+			color: #FFFFFF;
+		}
+
+		
+
+
+
+		.footer-bottom {
+		    background-color: #e7eaec;
+		    min-height: 30px;
+		    width: 100%;
+		}
+		.copyright {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		}
+		.design {
+		    color: #676a6c;
+		    line-height: 30px;
+		    min-height: 30px;
+		    padding: 7px 0;
+		    text-align: right;
+		}
+		.design a {
+		    color: #676a6c;
+		}
+
+		.pagination a {
+		    color: black;
+		    float: left;
+		    padding: 8px 16px;
+		    text-decoration: none;
+
 		}
 	    
+
+	    .pagination a.active {
+		    background-color: #1ab394;
+		    color: white;
+		}
+
+		.pagination a:hover:not(.active) {background-color: rgba(62,75,88, 0.7);}
+
+		.rv{
+			    height: 150px;
+    			background-size: cover;
+    			background-image: url('http://visitas.presidencia.gov.co/web/fts/casa-narino-1-fachada.jpg') ;
+
+    			
+    			padding-top: 0.25rem;
+    			  
+ 
+			}
+
+		.rp{
+			-webkit-box-flex: 40;
+			flex: 1 1 auto;
+    		padding: 0.25rem;
+			    
+		}
+		
 
 	</style>
 
@@ -183,7 +271,7 @@
 							    	
 
 							      <span class="input-group-btn">
-							        <button class="btn btn-success no-border" id="search_submit" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+							        <button class="btn btn-site no-border" id="search_submit" type="submit"><i class="glyphicon glyphicon-search"></i> Buscar</button>
 							      </span>
 							    </div>
 						    </form>
@@ -216,11 +304,20 @@
 					
 									    <div class="thumbnail political-thumbnail">
 
-									    	
-									      	<img class="avatar" src="<%= political.foto %>" style="width: 150px; height: 150px; object-fit: cover;">
+									    	<div class="rv">
 
-									 
-									    	<div class="caption">
+
+									    	</div>
+
+									    	
+									    	
+									    	<div class="rp">
+									    		<a >
+									    			
+									    		</style>
+									    		<img class="avatar" src="<%= political.foto %>" style="width: 120px; height: 120px; object-fit: cover;  margin-top: -70px; vertical-align: middle;">
+									    		</a>
+
 										        <h3><strong><%= political.nombre %></strong></h3>
 										        <p><strong> Nacionalidad:</strong> <%= political.nacionalidad %>
 										        <strong> Ocupación:</strong> <%= political.ocupacion %>
@@ -244,42 +341,74 @@
 						  	
 						  </div>
 
-						<nav aria-label="Page navigation no-border">
-							  <ul class="pagination no-border" id="pagin">
+						
+							  <div class="pagination" id="pagin">
 							  	
-							    <li>
+							    
 							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page)-1) %>" aria-label="Previous">
-							        <span aria-hidden="true">&laquo;</span>
+							        <span aria-hidden="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></span>
 							      </a>
-							    </li>
+							    
 							    
 							    <% for( i=1;i<=num_pages;i++){ %>
 
 							    	<% if (page == i){ %>
-								    	<li  style="border-radius: 0px" class="active no-border" ><a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a></li>
+								    	<a  class="active" type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a>
 								    
 								    
 							    	<% } else{ %>
-								    	<li class="no-border"><a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a></li>
+								    	<a  type="button" id="page_<%= i %>" name="page_<%= i %>" href="/search/person:<%=search %>?search=wiki&page=<%= i %>"><%= i %></a>
 
 
 
 									<% } %>
 								<% } %>
-								<li>
+								
 							      <a href="/search/person:<%=search %>?search=wiki&page=<%= (parseInt(page) + 1) %>" aria-label="Next">
-							        <span aria-hidden="true">&raquo;</span>
+							        <span aria-hidden="true"><i class="fa fa-arrow-right" aria-hidden="true"></i></span>
 							      </a>
-							    </li>
-							  </ul>
-						</nav>
+							    
+							  
+							<div>
+						
 
 						  	
-
-					
+</div>
+					</div>
 						
 					</div>
 				</div><!-- /.row -->
+			</div>
+
+			<div class="footer-bottom">
+
+				<div class="container">
+
+					<div class="row">
+
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+							<div class="copyright">
+
+								© 2016-2017, "Nombre de la Aplicación"
+							</div>
+
+						</div>
+
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+
+							<div class="design">
+
+								 <a target="_blank" href="http://comunidad.udistrital.edu.co/gesdatos/">Grupo de Investigación Gesdatos </a> |  <a target="_blank" href="https://www.udistrital.edu.co/">Universidad Distrital Francisco José de Caldas</a>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
 			</div>
 
 			
