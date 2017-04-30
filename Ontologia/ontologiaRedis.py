@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 import json 
 import redis
-import Charmer
-from FileManager import FileManager
 
 class load_Ontologia():
-	def __init__(self):
-		self.fileManager = FileManager()
-		self.ontologia = self.fileManager.leerJson("ontologia.json")
 
 	def sendRedis(self,callback):
 		redisClient = redis.StrictRedis(host='localhost', port=6379, db=0) 	
@@ -32,9 +27,21 @@ class load_Ontologia():
 					return redisClient.smembers(query)
 		return self.sendRedis(function)
 
+	def loadCategoria(self):
+		try:
+			num = 1       
+			with open("categorias.txt",'r') as file:
+				for line in file:
+					def function(redisClient):
+						return "Registros insertados: " + str(redisClient.sadd("categoria",line.strip("\n")))
+					print(self.sendRedis(function))
+		except IOError:
+			self.recordError("No se puede leer el archivo: " + file)
+
 	def cargarOntologia(self):
 		self.addSet("nodos", self.ontologia["nodos"]);		
 		self.addSet("relaciones", self.ontologia["relaciones"]);
 		self.addSet("sinonimos", self.ontologia["sinonimos"]);
 
 a = load_Ontologia()
+a.loadCategoria()
