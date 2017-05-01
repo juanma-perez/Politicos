@@ -69,7 +69,7 @@ app.use(express.static('static'));
 
 app.get('/send_political', function(request, response){
 
-	var political="Gustavo Rojas Pinilla"
+	var political="Juan Manuel Santos"
 
 	
 	context = {}
@@ -98,7 +98,7 @@ app.get('/search/person:*', function(request, response){
 
 	sendMongo(function (db){
 	 	db.collection(properties.mongo.collections).find({"Nombre": {"$in": [new RegExp(political, "i") ]} }).toArray(function(err, result) {
-	 		console.log(result)
+	 		//console.log(result)
 
 	 		num_pages=Math.ceil(result.length/quantity_characters)
 
@@ -115,9 +115,6 @@ app.get('/search/person:*', function(request, response){
 					page=request.query.page
 					initial=quantity_characters*(parseInt(page)-1)
 				}
-
-				
-		
 
 			}else{
 
@@ -195,16 +192,92 @@ app.get('/search/person:*', function(request, response){
 				list_political.push(dict_personaje)
 			}
 
+			
+
 			context['political_list']=list_political
 			context['search']=request.query.search
 			context['num_pages']=num_pages
 			context['current_page']=page
 
+
 			response.render('search_political.html',context)
+
+			
+
+			
  		});
 	})
 
     });
+
+app.get('/search/getsuggestion', function(request, response){
+
+	socket.emit('search suggestions', request.query.search)
+
+	socket.on('suggestion response', function(msg) {
+    			context['suggestion']=msg
+
+
+    			list_url=[]
+
+    			msg.forEach(function(element){
+    				list_url.push(element.url)
+    				
+    			})
+
+    			console.log(list_url)
+
+    			sendMongo(function (db){
+
+
+					
+
+						db.collection(properties.mongo.collections).find({"url": {"$in": list_url } }).toArray(function(err, result) {
+
+					 		//console.log({"Nombre": {"$in": [/nombre/i] } })
+				    		if(result.length>0){
+				    			
+				    			for(i=0;i<msg.length;i++){
+
+
+				    				result.forEach(function(element){
+
+					    				if(msg[i].url == element.url){
+					    					
+					    					msg.splice(i,1)
+
+					    				}
+				    				})
+
+				    				
+				    			}
+				    			
+
+				    			response.status(200).end(JSON.stringify(msg))
+				    			
+				    		}else{
+				    			response.status(200).end(JSON.stringify(msg))
+				    		}
+
+
+
+				    		
+			 			});
+
+					
+
+					
+				 	
+				})
+    			 //response.end()
+
+
+    		});
+
+
+})
+
+
 
 
 app.get("/autocomplete/politicos", function (request,response) {
@@ -223,3 +296,4 @@ app.get("/autocomplete/politicos", function (request,response) {
  		});
 	})
 })
+

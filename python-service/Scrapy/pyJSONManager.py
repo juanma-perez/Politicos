@@ -43,6 +43,8 @@ class JSONManager:
             if self.page is not None:
                 dic = self.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
                 dic = self.addValue(dic,"Nombre",self.page.getTitle())
+                dic = self.addValue(dic,"url",self.page.getUrl())
+                
                 
                 dic = self.addValue(dic,"Foto", getPageData(self.search).get('Imagen'))
                 
@@ -62,6 +64,7 @@ class JSONManager:
         except Exception as error:
                 self.fileManager.recordError(str(error))
         return dic
+
 
 a = JSONManager("asdkasdj")
 aaa = a.scrapeTable()

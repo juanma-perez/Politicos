@@ -100,17 +100,13 @@
     		color: white;
     	}
     	.political-thumbnail:hover{
-<<<<<<< HEAD
-    		background-color: rgba(62,75,88, 0.7); 
-=======
-<<<<<<< HEAD
-    		background-color: rgba(19,44,56, 0.4); 		
-=======
-    		background-color: rgba(19,44,56, 0.7); 
->>>>>>> f2d676de167a39d5c744466183f7fc8120568539
 
-			
->>>>>>> e1a0e3167f00aa39d871dfd367dcde208df25042
+    		background-color: rgba(62,75,88, 0.7); 
+
+    		background-color: rgba(19,44,56, 0.4); 		
+
+    		background-color: rgba(19,44,56, 0.7); 
+
 			
     	}
     	.margin-top-panel{
@@ -150,7 +146,19 @@
 			color: #FFFFFF;
 		}
 
-		
+		.btn-site-info{
+			
+			background-color: #969292;
+			border-color: #969292;
+			color: #FFFFFF;		 
+		}
+
+		.btn-site-info:hover{
+			
+			background-color: #a7b1c2;
+			border-color: #a7b1c2;
+			color: #FFFFFF;		 
+		}
 
 
 
@@ -241,6 +249,38 @@
 		  // options
 		  itemSelector: '.grid-item',
 		  
+		});
+
+		$.get( "/search/getsuggestion", { search: "<%= search %>" } )
+			.done(function( data ) {
+				console.log(JSON.parse(data))
+				data_list=JSON.parse(data)
+
+				elemt=3;
+
+				for(i=0;i<data_list.length; i=i+2){
+
+					if((i+1) == data_list.length){
+						$("#table_body").append('<tr>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
+											'</tr>')
+					}else if((i+2) == data_list.length){
+						$("#table_body").append('<tr>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+1].Title+'<a/></td>'+
+											'</tr>')
+					}else{
+						$("#table_body").append('<tr>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+1].Title+'<a/></td>'+
+											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+2].Title+'<a/></td>'+
+											'</tr>')
+					}
+					
+
+					
+				}
+				
 		});
 
 		
@@ -369,13 +409,26 @@
 							      </a>
 							    
 							  
+							
+								</div>
 							<div>
-						
 
-						  	
-</div>
-					</div>
-						
+								<div class="panel panel-default" style ="margin-top: 10px; border-left-color: #1c84c6; border-left-width: 5px" align="left">
+
+									<div class="panel-body">
+										<h4><label><i class="fa fa-circle-o-notch fa-spin"></i> Tal vez estás buscando... </label><h4>
+									</div>
+
+								</div>
+
+								<table class="table">
+   
+								    <tbody id="table_body">
+								      
+								      
+								    </tbody>
+								  </table>
+							</div>
 					</div>
 				</div><!-- /.row -->
 			</div>

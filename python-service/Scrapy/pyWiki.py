@@ -15,6 +15,9 @@ def doSearch(search):
 def getCategories(page):
     return page.categories #Get the categories of a page from Wikipedia
 
+def getSuggestion(search):
+	return wikipedia.suggest(search)
+
 def getPageData(search):
 	dic ={}
 	try:
@@ -30,6 +33,7 @@ def getPageData(search):
 		dic["Url"]=page.url		
 		dic["Imagen"]= "Imagen no disponible"
 		dic["Categorias"] = getCategories(page)
+		
 	page = wptools.page(search).get_query()
 	dic["Title"]= page.title
 	dic["Url"]= page.url

@@ -19,6 +19,16 @@ def test_message(message):
 	print message
 	emit('my response', jsonFile.scrapeTable())
 
+@socketio.on('search suggestions', namespace='/')
+def getSuggestion(message):
+	
+	suggestion = Searcher()
+	print suggestion
+	print message
+	emit('suggestion response', suggestion.doSearch(message))
+
+
+
 #@socketio.on('my broadcast event', namespace='/')
 #def test_message(message):
 #    emit('my response', {'data': message['data']}, broadcast=True)
