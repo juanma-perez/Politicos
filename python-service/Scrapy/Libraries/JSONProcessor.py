@@ -14,8 +14,8 @@ def clearValue(sentence):
 
 #Eliminates characters that generate conflicts with json structure
 def eliminateCharacters(cadena):
-    d={'.':'',';':''}
-    return ''.join(d[s] if s in d else s for s in cadena)
+    d={'.':'',';':'',u'\u00ba':'','1':'','2':'','3':'','4':'','5':'','6':'','7':'','8':'','9':'','0':''}
+    return (''.join(d[s] if s in d else s for s in cadena)).strip()
 
 #Adds Values to a dictionary
 def addValue(dictionary,name,value):
