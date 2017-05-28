@@ -1,5 +1,5 @@
 import wikipedia
-from wptools import wptools 
+#from wptools import wptools 
 import urllib
 import urllib2
 
