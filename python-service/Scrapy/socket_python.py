@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 from flask.ext.socketio import SocketIO, emit
-from pySearcher import Searcher
-from pyJSONManager import JSONManager
+import pyWiki
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -21,12 +20,14 @@ def test_message(message):
 
 @socketio.on('search suggestions', namespace='/')
 def getSuggestion(message):
-	
-	suggestion = Searcher()
-	print suggestion
+	print "La busqueda es: "
 	print message
-	emit('suggestion response', suggestion.doSearch(message))
+	emit('suggestion response', pyWiki.search(message))
 
+@socketio.on('search dataSuggestions', namespace='/')
+def getDataSuggestion(message):
+	print message
+	emit('suggestion dataResponse', pyWiki.getPageData(message))
 
 
 #@socketio.on('my broadcast event', namespace='/')

@@ -29,6 +29,18 @@ function getSetRedis(redisClient,query,callback){
 		callback(result)
 	})
 }
+function pruebaSearcher(){
+	socket.emit('search suggestions', "Juan Manuel Santos Calderon")
+
+	socket.on('suggestion response', function(msg) {
+		msg.forEach(function(element){
+			socket.emit('search dataSuggestions', element)
+			socket.on('suggestion dataResponse', function(data) {
+				console.log(data)
+			})
+		})
+	})
+}
 
 var options = { root: __dirname + '/static/'}
 
@@ -36,6 +48,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
+	pruebaSearcher();
 	//sendRedis(testRedis);
 	//sendRedis(function(redisClient){
 	//	getSetRedis(redisClient,"nodos:Lugar", function(result){console.log(result)})
