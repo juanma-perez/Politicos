@@ -1,46 +1,38 @@
 import wikipedia
-from wptools import wptools 
-import urllib
-import urllib2
+import pyScraper 
 
 # -*- coding: utf-8 -*-
 wikipedia.set_lang("es")
 
+#Returns a wikipedia object
 def getPage(search):
     return wikipedia.page(search) 
 
-def doSearch(search):
+#Returns a list with the results of a serch
+def search(search):
 	return wikipedia.search(search)	
 	
+#Get wikipedia page categories
 def getCategories(page):
     return page.categories #Get the categories of a page from Wikipedia
+
 
 def getSuggestion(search):
 	return wikipedia.suggest(search)
 
+#Returns un json with the principal elements of a serch
 def getPageData(search):
 	dic ={}
 	try:
-		page = wptools.page(search).get_query()
-		dic["Title"]= page.title
-		dic["Url"]= page.url
-		dic["Imagen"]= page.image('page')['url']
-		print "----->Categorias:"
-		page 
-	except Exception as error:
 		dic["Title"]=search
 		page =  getPage(search)
-		dic["Url"]=page.url		
-		dic["Imagen"]= "Imagen no disponible"
+		dic["Url"]=page.url
+		try: 		
+			dic["Imagen"]= pyScraper.getTableImage(page.url)
+		except Exception as errorImg:
+			dic["Imagen"]= "Imagen no disponible"
 		dic["Categorias"] = getCategories(page)
-		
-	page = wptools.page(search).get_query()
-	dic["Title"]= page.title
-	dic["Url"]= page.url
-	try:
-		dic["Imagen"]= page.image('page')['url']
-
+		return dic
 	except Exception as error:
-		dic["Imagen"]='No_Disponible'
-	return dic
-		
+		print str(error)
+
