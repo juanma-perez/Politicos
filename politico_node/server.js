@@ -329,6 +329,23 @@ app.get('/load/person:*', function(request, response){
 		info['nombre']=result[0].Nombre
 		info['imagen']=result[0].Foto
 
+		if(result[0]['Información personal']['Residencia']){
+			info['residencia']=result[0]['Información personal']['Residencia']
+
+		}else{
+			info['residencia']=''
+		}
+
+		if(result[0]['Información profesional']){
+					if(result[0]['Información profesional']['Ocupación']){
+	    				info['ocupacion']=result[0]['Información profesional']['Ocupación']
+	    			}else{
+	    				info['ocupacion']=''
+	    			}
+				}else{
+					info['ocupacion']=''
+				}
+
 		context['info']=info	
 
 		response.render('graph_political.html',context)
