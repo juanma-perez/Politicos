@@ -6,12 +6,15 @@ var MongoClient = require('mongodb').MongoClient,
 					assert = require('assert'); //May be es errores
 var properties = require('./properties.json')
 var redis = require('redis')
+var mongo = require('mongodb');
+
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.set('views', __dirname + '/views'); //REderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
 app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
+
 
 function testRedis(redisClient){
 	//redisClient.set('test','It's working,redis.print)
@@ -262,10 +265,10 @@ app.get('/search/getsuggestion', function(request, response){
 				    				
 				    			}
 				    			
-
 				    			response.status(200).end(JSON.stringify(msg))
 				    			
-				    		}else{
+				    		}
+				    		else{
 				    			response.status(200).end(JSON.stringify(msg))
 				    		}
 
@@ -305,5 +308,33 @@ app.get("/autocomplete/politicos", function (request,response) {
 			)
  		});
 	})
+})
+
+app.get('/load/person:*', function(request, response){
+
+
+	console.log(request.query.id)
+	var political_id = new mongo.ObjectID(request.query.id);
+	context={}
+
+	sendMongo(function (db){
+	 	db.collection(properties.mongo.collections).find({"_id": political_id }).toArray(function(err, result) {
+	 		console.log({"Nombre": {"$in": [/nombre/i] } })
+    		
+		info={}
+
+		info['nombre']=result[0].Nombre
+		info['imagen']=result[0].Foto
+
+		context['info']=info	
+
+		response.render('graph_political.html',context)
+ 		});
+	})
+
+
+	
+
+
 })
 
