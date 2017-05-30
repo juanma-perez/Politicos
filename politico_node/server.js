@@ -245,9 +245,6 @@ app.get('/search/getsuggestion', function(request, response){
 
     			sendMongo(function (db){
 
-
-					
-
 						db.collection(properties.mongo.collections).find({"url": {"$in": list_url } }).toArray(function(err, result) {
 
 					 		//console.log({"Nombre": {"$in": [/nombre/i] } })

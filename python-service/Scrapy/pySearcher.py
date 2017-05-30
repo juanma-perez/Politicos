@@ -11,9 +11,9 @@ class Searcher:
         return list
 
 
-#a = Searcher()
+a = Searcher()
 
-#print a.doSearch("Alvaro Uribe Velez")
+print a.doSearch("Alvaro Uribe Velez")
 
 # for a in pyWiki.search("Juan Manuel Santos Calderon"):
 #     print a.encode('utf-8')

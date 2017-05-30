@@ -36,8 +36,8 @@ def writeFileJSON(file, line):
 		registerError("Error: " + error)
 
 #Return the file lines
-def readFile(path,file):
+def readFile(file):
 	try:      
-		return open(path + file,'r')
+		return open(path["filePath"]+ "/" + file,'r')
 	except IOError:
 		registerError("No se puede leer el archivo: " + file)
