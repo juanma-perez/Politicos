@@ -20,7 +20,7 @@ def addSet(root, json):
 				return "Registros insertados: " + str(redisClient.sadd(clave,json[subRoot][i]))
 			print(self.sendRedis(function))
 
-def getSet(self, query):
+def getSet(query):
 	def function(redisClient):
 				return redisClient.smembers(query)
-	return self.sendRedis(function)
+	return sendRedis(function)

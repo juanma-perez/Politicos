@@ -52,6 +52,5 @@ def politic_scrapeTable(url,image):
 	except Exception as error:
 	   	fm.registerError(str(error))
 	return dic 
-
-#politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","")
-#fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos"))
+politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","")
+fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos", "no disponible"))

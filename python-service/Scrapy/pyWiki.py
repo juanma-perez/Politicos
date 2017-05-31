@@ -1,8 +1,10 @@
 import wikipedia
 import pyScraper 
-
+import Libraries.pyRedis as redis
 # -*- coding: utf-8 -*-
 wikipedia.set_lang("es")
+
+categorias = redis.getSet("categoria")
 
 #Returns a wikipedia object
 def getPage(search):
@@ -31,8 +33,8 @@ def getPageData(search):
 			dic["Imagen"]= pyScraper.getTableImage(page.url)
 		except Exception as errorImg:
 			dic["Imagen"]= "Imagen no disponible"
-		dic["Categorias"] = getCategories(page)
+		print set(getCategories(page))
+		dic["Politic"] = bool(set([x.encode("utf-8") for x in getCategories(page)]) & set(categorias))
 		return dic
 	except Exception as error:
 		print str(error)
-
