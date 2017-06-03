@@ -32,18 +32,7 @@ function getSetRedis(redisClient,query,callback){
 		callback(result)
 	})
 }
-function pruebaSearcher(){
-	socket.emit('search suggestions', "Juan Manuel Santos Calderon")
 
-	socket.on('suggestion response', function(msg) {
-		msg.forEach(function(element){
-			socket.emit('search dataSuggestions', element)
-			socket.on('suggestion dataResponse', function(data) {
-				console.log(data)
-			})
-		})
-	})
-}
 
 var options = { root: __dirname + '/static/'}
 
@@ -231,6 +220,18 @@ app.get('/search/getsuggestion', function(request, response){
 	socket.emit('search suggestions', request.query.search)
 
 	socket.on('suggestion response', function(msg) {
+
+		data={}
+		data['suggestions']=msg
+		response.end(JSON.stringify(data))
+
+	})
+	
+
+
+
+
+	/*socket.on('suggestion response', function(msg) {
     			context['suggestion']=msg
 
 
@@ -265,29 +266,19 @@ app.get('/search/getsuggestion', function(request, response){
 				    				
 				    			}
 				    			
-				    			response.status(200).end(JSON.stringify(msg))
+				    			response.status(200).send(JSON.stringify(msg))
 				    			
 				    		}
 				    		else{
-				    			response.status(200).end(JSON.stringify(msg))
+				    			response.status(200).send(JSON.stringify(msg))
 				    		}
 
-
-
-				    		
-			 			});
-
-					
-
-					
-				 	
+			 			});	 	
 				})
     			 //response.end()
 
 
-    		});
-
-
+    		});*/
 })
 
 
@@ -353,5 +344,17 @@ app.get('/load/person:*', function(request, response){
 	
 
 
+})
+
+app.get('/search/getDataSuggestion', function(request, response){ //Start the main page 
+	
+	console.log(request.query.search)
+	socket.emit('search dataSuggestions', request.query.search)
+	socket.on('suggestion dataResponse', function(data) {
+
+		
+		response.end(JSON.stringify(data))
+	})
+	
 })
 

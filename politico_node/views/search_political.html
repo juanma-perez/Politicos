@@ -60,6 +60,16 @@
 		    
 		    
 		}
+
+		.avatar2 {
+					/* cambia estos dos valores para definir el tamaño de tu círculo */  
+		    width: 60px;
+		    height:60px;
+		    border-radius:100%;
+		    border:3px solid white;
+		    
+		    
+		}
 		
 
 		.political-thumbnail{
@@ -225,6 +235,8 @@
 
 	<script>
 
+	var political_list=[]
+
 	$(document).ready(function() {
 		$('#autocomplete').autocomplete({
 		    serviceUrl: '/autocomplete/politicos',
@@ -254,41 +266,102 @@
 		$.get( "/search/getsuggestion", { search: "<%= search %>" } )
 			.done(function( data ) {
 				console.log(JSON.parse(data))
+
 				data_list=JSON.parse(data)
 
-				elemt=3;
+				getDataSuggestion(data_list.suggestions,0)
+				//data_list.suggestions.forEach(function(element){
 
-				for(i=0;i<data_list.length; i=i+2){
+				//});
+					
+			})
 
-					if((i+1) == data_list.length){
-						$("#table_body").append('<tr>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
-											'</tr>')
-					}else if((i+2) == data_list.length){
-						$("#table_body").append('<tr>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+1].Title+'<a/></td>'+
-											'</tr>')
-					}else{
-						$("#table_body").append('<tr>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i].Title+'<a/></td>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+1].Title+'<a/></td>'+
-											'<td><a class="btn btn-site-info"><i class="fa fa-university fa-lg"></i></a> <a>'+data_list[i+2].Title+'<a/></td>'+
-											'</tr>')
+		})
+
+	function getDataSuggestion(list, cont){
+
+		if(cont<list.length){
+
+
+		$.ajax( {
+				url:"/search/getDataSuggestion?search="+list[cont],
+				type: 'GET',
+				success:function(response){
+
+					data_politic={}
+					data_politic=JSON.parse(response)
+
+					if(JSON.parse(response).Politic){
+
+						political_list.push(JSON.parse(response))
+						console.log(political_list)
+
+						$("#table_body").empty();
+
+						for(i=0;i<political_list.length; i=i+3){
+
+							if (political_list[i].Imagen== "Imagen no disponible"){
+
+								imagen='/images/hombre.png'
+							}else{
+								imagen=political_list[i].Imagen
+							}
+
+							if((i) == political_list.length-1){
+
+
+								$("#table_body").append('<tr>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px"> <a>'+political_list[i].Title+'<a/></td>'+
+													'</tr>')
+							}else if((i+1) == political_list.length-1){
+
+								if (political_list[i+1].Imagen== "Imagen no disponible"){
+
+									imagen1='/images/hombre.png'
+								}else{
+									imagen1=political_list[i+1].Imagen
+								}
+
+								$("#table_body").append('<tr>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a>'+political_list[i].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px"> <a>'+political_list[i+1].Title+'<a/></td>'+
+													'</tr>')
+							}else{
+								if (political_list[i+1].Imagen== "Imagen no disponible"){
+
+									imagen1='/images/hombre.png'
+								}else{
+									imagen1=political_list[i+1].Imagen
+								}
+
+								if (political_list[i+2].Imagen== "Imagen no disponible"){
+
+									imagen2='/images/hombre.png'
+								}else{
+									imagen2=political_list[i+2].Imagen
+								}
+								$("#table_body").append('<tr>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a>'+political_list[i].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px">  <a>'+political_list[i+1].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen2+'" height = "50px" width="50px">  <a>'+political_list[i+2].Title+'<a/></td>'+
+													'</tr>')
+							}
+										
+						}
+
+
+
 					}
-					
 
-					
-				}
-				
-		});
+					getDataSuggestion(list, cont+1)
+
+				},
+			});
+
+		}
 
 		
-
-
-	});
-
-
+	}
 
 	</script>
 
