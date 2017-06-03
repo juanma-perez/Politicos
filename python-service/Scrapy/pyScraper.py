@@ -40,17 +40,15 @@ def politic_scrapeTable(url,image):
 			parent = ""
 			for fil in filas:
 				if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
-					parent = jsonp.clearValue(fil.find_all('th')[0].text)
-					dic = jsonp.addValue(dic,jsonp.eliminateCharacters(parent),{})
-				elif len(fil.find_all('th')) >= 1  and len(fil.find_all('td')) > 0:
+					parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
+					dic = jsonp.addValue(dic,parent,{})
+				elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
 					if parent != "":
-						temp = {}
-						temp = jsonp.addValue(temp,fil.find_all('th')[0].text, jsonp.clearValue(fil.find_all('td')[0].text))
-						dic = jsonp.addValue(dic,jsonp.eliminateCharacters(parent),temp)
+						dic[parent] = jsonp.addValue(dic[parent],fil.find_all('th')[0].text, jsonp.clearValue(fil.find_all('td')[0].text))
 					else:
 						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)		
 	except Exception as error:
 	   	fm.registerError(str(error))
 	return dic 
-politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","")
-fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos", "no disponible"))
+#politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","")
+#fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos", "no disponible"))
