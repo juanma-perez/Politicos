@@ -290,6 +290,9 @@
 
 					data_politic={}
 					data_politic=JSON.parse(response)
+					console.log(response)
+
+					if(JSON.parse(response)!= null && JSON.parse(response) != undefined){
 
 					if(JSON.parse(response).Politic){
 
@@ -352,6 +355,8 @@
 
 
 					}
+
+				}
 
 					getDataSuggestion(list, cont+1)
 
