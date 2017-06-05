@@ -3,9 +3,20 @@ import pyScraper
 
 wikipedia.set_lang("es")
 def obtenerPaginas(persona):
+	print "Relaciones Familiares: "
+	print
 	page = wikipedia.page(persona)
 	imprimirLinks(page.url,persona)
-	
+	print
+	print "Relaciones Laborales: "
+	print	
+	info = pyScraper.politic_scrapeTable(page.url, "")
+	for item in info["laboral - links"]:
+		for link in item:
+			if "Archivo" not in link["url"]:
+				print link["title"].encode("utf-8") + ": "+ link["url"].encode("utf-8")
+	 
+
 visitadas = set()
 
 def imprimirLinks(url,persona):
@@ -23,4 +34,4 @@ def imprimirLinks(url,persona):
 		
 
 
-obtenerPaginas("Juan Manuel Santos")
+obtenerPaginas("Clara Lopez")
