@@ -11,16 +11,16 @@ def obtenerPaginas(persona):
 	print "Relaciones Laborales: "
 	print	
 	info = pyScraper.politic_scrapeTable(page.url, "")
-	for item in info["laboral - links"]:
-		for link in item:
-			if "Archivo" not in link["url"]:
-				print link["title"].encode("utf-8") + ": "+ link["url"].encode("utf-8")
-	 
+	if info.has_key("laboral - links"):
+		for item in info["laboral - links"]:
+			for link in item:
+				if "Archivo" not in link["url"]:
+					print link["title"].encode("utf-8") + ": "+ link["url"].encode("utf-8")
+		 
 
 visitadas = set()
 
-def imprimirLinks(url,persona):
-	
+def imprimirLinks(url,persona):	
 	info = pyScraper.politic_scrapeTable(url, "")
 	if info.has_key("Familia"):
 		for item in info["Familia"]:
@@ -34,4 +34,4 @@ def imprimirLinks(url,persona):
 		
 
 
-obtenerPaginas("Clara Lopez")
+obtenerPaginas("Alvaro Uribe")
