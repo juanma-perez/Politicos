@@ -298,7 +298,7 @@ app.get('/load/person:*', function(request, response){
 
 app.get('/search/getDataSuggestion', function(request, response){		
 	socket.emit('search dataSuggestions', request.query.search)
-<<<<<<< HEAD
+
 	socket.on('suggestion dataResponse', function(data) {
 
 
@@ -329,10 +329,10 @@ app.get('/search/getDataSuggestion', function(request, response){
 	 		}	 	
 		})
 
-=======
+
 	socket.on('suggestion dataResponse', function(data) {		
 		response.end(JSON.stringify(data))
->>>>>>> 5852e64b68b11d947de78a4aea9d5bc14386b075
+
 	})
 	
 })
