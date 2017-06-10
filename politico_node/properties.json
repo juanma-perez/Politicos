@@ -12,5 +12,11 @@
 	"node":{
 		"port":8082
 
+	},
+	"neo4j":{
+		"host":"localhost",
+		"port":7474,
+		"user":"neo4j",
+		"password":"1234"
 	}
 }

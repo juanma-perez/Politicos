@@ -7,7 +7,7 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 var mongo = require('mongodb');
-
+var neo4j = require('neo4j');
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -15,6 +15,21 @@ app.set('views', __dirname + '/views'); //REderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
 app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
 
+function sendNeo4j(){
+	
+	var db = new neo4j.GraphDatabase('http://' + properties.neo4j.user + ":" + properties.neo4j.password + "@" + properties.neo4j.host + ":"+properties.neo4j.port);
+ 
+		db.cypher({
+    		query: 'create (p:person {nombre:{nombre}}) return p',
+    		params: {
+        		nombre: 'JuanMa',
+    		},
+		}, function (err, results) {
+    		if (err) throw err;
+    		var result = results[0];
+    		console.log(result);    		
+		});	
+}
 
 function testRedis(redisClient){
 	//redisClient.set('test','It's working,redis.print)
@@ -40,7 +55,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	response.render('index.html');
 	console.log("Connection completed");
-	pruebaSearcher();
+	//sendNeo4j()
 	//sendRedis(testRedis);
 	//sendRedis(function(redisClient){
 	//	getSetRedis(redisClient,"nodos:Lugar", function(result){console.log(result)})
@@ -183,15 +198,10 @@ app.get('/search/person:*', function(request, response){
 
 				list_political.push(dict_personaje)
 			}
-
-			
-
 			context['political_list']=list_political
 			context['search']=request.query.search
 			context['num_pages']=num_pages
 			context['current_page']=page
-
-
 			response.render('search_political.html',context)
 
 			
@@ -286,10 +296,9 @@ app.get('/load/person:*', function(request, response){
 
 })
 
-app.get('/search/getDataSuggestion', function(request, response){ //Start the main page 
-	
-	console.log(request.query.search)
+app.get('/search/getDataSuggestion', function(request, response){		
 	socket.emit('search dataSuggestions', request.query.search)
+<<<<<<< HEAD
 	socket.on('suggestion dataResponse', function(data) {
 
 
@@ -320,6 +329,10 @@ app.get('/search/getDataSuggestion', function(request, response){ //Start the ma
 	 		}	 	
 		})
 
+=======
+	socket.on('suggestion dataResponse', function(data) {		
+		response.end(JSON.stringify(data))
+>>>>>>> 5852e64b68b11d947de78a4aea9d5bc14386b075
 	})
 	
 })

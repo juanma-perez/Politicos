@@ -1,6 +1,6 @@
 import wikipedia 
-
-
+import pyScraper
+wikipedia.set_lang("es")
 def busqueda(valor, limit):
 	lista = []
 	page = wikipedia.page(valor)
@@ -30,4 +30,16 @@ def obtenerPaginas(links,num,limit):
 #a = set([1,2,3])
 #b = set([3,4,5])
 #print a.union(b)
-busqueda("Juan Manuel Santos",10)
+#busqueda("Juan Manuel Santos",10)
+
+def buscarRelacionPersona(persona):
+	print persona.encode("utf-8")
+	page = wikipedia.page(persona)
+	print page
+	info =  pyScraper.politic_scrapeTable(page.url,"NA")
+	if info.has_key("Familia"):
+		for familiar in info["Familia"]:
+			for key in info["Familia"][familiar]:
+				buscarRelacionPersona(key)
+
+buscarRelacionPersona("Juan Manuel Santos Calderon")

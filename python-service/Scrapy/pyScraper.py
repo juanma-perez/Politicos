@@ -2,6 +2,7 @@
 from bs4 import BeautifulSoup
 import urllib
 import urllib2
+import re
 import time
 import Libraries.FileManager as fm
 import Libraries.JSONProcessor as jsonp
@@ -37,14 +38,18 @@ def politic_scrapeTable(url,image):
 			dic = jsonp.addValue(dic,"Url",url)
 			dic = jsonp.addValue(dic,"Imagen",url)			
 			filas = table.find_all('tr')[2:]
+			dic["laboral - links"] = []
 			parent = ""
 			for fil in filas:
 				if len(fil.find_all('th'))>0 and len(fil.find_all('td'))<1:
 					parent = jsonp.eliminateCharacters(jsonp.clearValue(fil.find_all('th')[0].text))
+					dic["laboral - links"].append(getLinks(fil.find_all('th')[0]))
 					dic = jsonp.addValue(dic,parent,{})
 				elif len(fil.find_all('th')) > 0  and len(fil.find_all('td')) > 0:
 					if parent != "":
 						dic[parent] = jsonp.addValue(dic[parent],fil.find_all('th')[0].text, jsonp.clearValue(fil.find_all('td')[0].text))
+						if len(fil.find_all('td')[0].findAll('a'))>0:
+							dic[parent] = jsonp.addValue(dic[parent],fil.find_all('th')[0].text + " - links", getLinks(fil.find_all('td')[0]))
 					else:
 						dic = jsonp.addValue(dic,fil.find_all('th')[0].text, fil.find_all('td')[0].text)		
 	except Exception as error:
@@ -52,3 +57,17 @@ def politic_scrapeTable(url,image):
 	return dic 
 #politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos","")
 #fm.writeFileJSON("prueba",politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos", "no disponible"))
+
+
+def getLinks(element):
+	temp = []
+	for link in element.findAll('a'):
+		if "wikidata" not in link.get('href'):
+			enlace = {}
+			enlace["title"] = link.get('title')
+			if "http" in link.get('href'):
+				enlace["url"] = link.get('href')
+			else:
+				enlace["url"] ="https://es.wikipedia.org" + link.get('href')
+		temp.append(enlace)
+	return temp
