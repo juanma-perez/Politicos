@@ -314,7 +314,7 @@
 
 
 								$("#table_body").append('<tr>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px"> <a>'+political_list[i].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px"> <a  onclick="search_political('+"'"+political_list[i].Url+"'"+')">'+political_list[i].Title+'<a/></td>'+
 													'</tr>')
 							}else if((i+1) == political_list.length-1){
 
@@ -326,8 +326,8 @@
 								}
 
 								$("#table_body").append('<tr>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a>'+political_list[i].Title+'<a/></td>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px"> <a>'+political_list[i+1].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a  onclick="search_political('+"'"+political_list[i].Url+"'"+')" >'+political_list[i].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px"> <a onclick="search_political('+"'"+political_list[i+1].Url+"'"+')">'+political_list[i+1].Title+'<a/></td>'+
 													'</tr>')
 							}else{
 								if (political_list[i+1].Imagen== "Imagen no disponible"){
@@ -344,9 +344,9 @@
 									imagen2=political_list[i+2].Imagen
 								}
 								$("#table_body").append('<tr>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a>'+political_list[i].Title+'<a/></td>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px">  <a>'+political_list[i+1].Title+'<a/></td>'+
-													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen2+'" height = "50px" width="50px">  <a>'+political_list[i+2].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen+'" height = "50px" width="50px">  <a onclick="search_political('+"'"+political_list[i].Url+"'"+')" >'+political_list[i].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen1+'" height = "50px" width="50px">  <a onclick="search_political('+"'"+political_list[i+1].Url+"'"+')" >'+political_list[i+1].Title+'<a/></td>'+
+													'<td><img class="avatar2" style="object-fit: cover" src="'+imagen2+'" height = "50px" width="50px">  <a onclick="search_political('+"'"+political_list[i+2].Url+"'"+') ">'+political_list[i+2].Title+'<a/></td>'+
 													'</tr>')
 							}
 										
@@ -363,9 +363,30 @@
 				},
 			});
 
+		}else{
+
+			$("#load_label").removeClass('fa-circle-o-notch')
+			$("#load_label").removeClass('fa-spin')
+			$("#load_label").addClass('fa-check-circle-o')
+			
+
 		}
 
 		
+	}
+
+	function search_political(url){
+
+		$("#loading_div").modal('toggle')
+
+		$.get( "/search/getScrapy", { 'url': url } )
+			.done(function( data ) {
+				$("#loading_div").modal('toggle');
+				location.reload()
+
+			});
+
+
 	}
 
 	</script>
@@ -495,7 +516,7 @@
 								<div class="panel panel-default" style ="margin-top: 10px; border-left-color: #1c84c6; border-left-width: 5px" align="left">
 
 									<div class="panel-body">
-										<h4><label><i class="fa fa-circle-o-notch fa-spin"></i> Tal vez estás buscando... </label><h4>
+										<h4><label id="label_search"><i id="load_label" class="fa fa-circle-o-notch fa-spin"></i> Tal vez estás buscando... </label><h4>
 									</div>
 
 								</div>
@@ -543,7 +564,23 @@
 
 			</div>
 
-			
+	<div class="modal fade" id="loading_div" data-backdrop="static" data-keyboard="false">
+
+		 <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		    	
+		      	<div class="modal-body" align="center">
+		      		<h3><i class="fa fa-paper-plane" aria-hidden="true"></i> Estamos recolectando información...</h3>
+		        	<img src="/images/loading.gif" />
+		      	</div>
+		      
+		    </div>
+
+		  </div>
+
+	</div>
 			
 		
 		

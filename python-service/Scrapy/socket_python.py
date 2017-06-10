@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask.ext.socketio import SocketIO, emit
 import pyWiki
+from pyScraper import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -13,10 +14,10 @@ socketio = SocketIO(app)
 @socketio.on('search politician', namespace='/')
 def test_message(message):
 	#busqueda = "Donald trump"
-	jsonFile = JSONManager(message)
-	print jsonFile
-	print message
-	emit('my response', jsonFile.scrapeTable())
+	#jsonFile = JSONManager(message)
+	#print jsonFile
+	#print message
+	emit('my response', politic_scrapeTable(message,''))
 
 @socketio.on('search suggestions', namespace='/')
 def getSuggestion(message):

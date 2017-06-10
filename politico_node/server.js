@@ -74,21 +74,8 @@ app.use(express.static('static'));
 
 app.get('/send_political', function(request, response){
 
-	var political="Juan Manuel Santos"
-
 	
-	context = {}
-	socket.emit('search politician', political)
-	socket.on('my response', function(msg) {
-    	context['nombre']=msg
-    	sendMongo(function(database){
-    		database.collection(properties.mongo.collections).insertMany([msg])
-    		console.log([msg])
-    		}
-    	);
-	});
-	       response.render('index.html',context)
-    });
+});
 
 app.get('/search/person:*', function(request, response){
 
@@ -148,8 +135,8 @@ app.get('/search/person:*', function(request, response){
     				dict_personaje['nombre']=''
     			}
 
-    			if(result[i].Foto != 'No_Disponible' ){
-    				dict_personaje['foto']=result[i].Foto
+    			if(result[i].Imagen != 'No_Disponible' ){
+    				dict_personaje['foto']=result[i].Imagen
 
     			}else{
     				dict_personaje['foto']='/images/hombre.png'
@@ -231,54 +218,7 @@ app.get('/search/getsuggestion', function(request, response){
 
 
 
-	/*socket.on('suggestion response', function(msg) {
-    			context['suggestion']=msg
-
-
-    			list_url=[]
-
-    			msg.forEach(function(element){
-    				list_url.push(element.url)
-    				
-    			})
-
-    			console.log(list_url)
-
-    			sendMongo(function (db){
-
-						db.collection(properties.mongo.collections).find({"url": {"$in": list_url } }).toArray(function(err, result) {
-
-					 		//console.log({"Nombre": {"$in": [/nombre/i] } })
-				    		if(result.length>0){
-				    			
-				    			for(i=0;i<msg.length;i++){
-
-
-				    				result.forEach(function(element){
-
-					    				if(msg[i].url == element.url){
-					    					
-					    					msg.splice(i,1)
-
-					    				}
-				    				})
-
-				    				
-				    			}
-				    			
-				    			response.status(200).send(JSON.stringify(msg))
-				    			
-				    		}
-				    		else{
-				    			response.status(200).send(JSON.stringify(msg))
-				    		}
-
-			 			});	 	
-				})
-    			 //response.end()
-
-
-    		});*/
+	
 })
 
 
@@ -352,9 +292,55 @@ app.get('/search/getDataSuggestion', function(request, response){ //Start the ma
 	socket.emit('search dataSuggestions', request.query.search)
 	socket.on('suggestion dataResponse', function(data) {
 
-		
-		response.end(JSON.stringify(data))
+
+		sendMongo(function (db){
+
+			if(data != null){
+
+				db.collection(properties.mongo.collections).find({"Url":  data.Url }).toArray(function(err, result) {
+
+			 		//console.log({"Nombre": {"$in": [/nombre/i] } })
+		    		if(result.length>0){
+		    			
+		    			
+		    			response.end(JSON.stringify(null))
+		    			
+		    			
+		    		}else{
+
+		    			response.end(JSON.stringify(data))
+
+		    		}
+		    		
+
+	 			});
+
+	 		}else{
+	 			response.end(JSON.stringify(data))
+	 		}	 	
+		})
+
 	})
 	
+})
+
+
+app.get('/search/getScrapy', function(request, response){ 
+
+	context = {}
+	socket.emit('search politician', request.query.url)
+	socket.on('my response', function(msg) {
+    	context['nombre']=msg
+    	sendMongo(function(database){
+    		database.collection(properties.mongo.collections).insertMany([msg])
+    		response.end('ok')
+    		
+    		}
+    	);
+	});
+	       
+
+
+
 })
 
