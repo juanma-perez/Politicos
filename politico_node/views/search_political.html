@@ -382,7 +382,7 @@
 		$.get( "/search/getScrapy", { 'url': url } )
 			.done(function( data ) {
 				$("#loading_div").modal('toggle');
-				location.reload()
+				window.open('/search/person:political?search='+data, '_self')
 
 			});
 

@@ -330,11 +330,10 @@ app.get('/search/getDataSuggestion', function(request, response){
 		})
 
 
-	socket.on('suggestion dataResponse', function(data) {		
-		response.end(JSON.stringify(data))
-
-	})
 	
+	
+})
+
 })
 
 
@@ -346,14 +345,9 @@ app.get('/search/getScrapy', function(request, response){
     	context['nombre']=msg
     	sendMongo(function(database){
     		database.collection(properties.mongo.collections).insertMany([msg])
-    		response.end('ok')
+    		response.end(msg.Nombre)
     		
     		}
     	);
 	});
-	       
-
-
-
-})
-
+})       
