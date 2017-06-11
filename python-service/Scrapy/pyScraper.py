@@ -26,7 +26,9 @@ def getTableImage(url):
 	return "https:" + getTable(getSoup(url)).find_all('tr')[1].find_all('img')[0]['src']
 		
 #Scrapy infobox (Proven for politicians) into json structure
-def politic_scrapeTable(url,image):
+def politic_scrapeTable(url):
+	print "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+	print url
 	soup = getSoup(url)
 	table = soup.find('table', 'infobox')
 	table = getTable(soup)
@@ -36,7 +38,7 @@ def politic_scrapeTable(url,image):
 			dic = jsonp.addValue(dic,"Fecha de registro", time.strftime("%x") + " " + time.strftime("%X"))
 			dic = jsonp.addValue(dic,"Nombre",getTitle(soup).replace(' - Wikipedia, la enciclopedia libre',''))
 			dic = jsonp.addValue(dic,"Url",url)
-			dic = jsonp.addValue(dic,"Imagen",url)			
+			dic = jsonp.addValue(dic,"Imagen",getTableImage(url))			
 			filas = table.find_all('tr')[2:]
 			dic["laboral - links"] = []
 			parent = ""

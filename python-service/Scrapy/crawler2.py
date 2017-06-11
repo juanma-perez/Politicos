@@ -1,6 +1,8 @@
 import wikipedia 
 import pyScraper
+import pyWiki
 
+print pyWiki.politic_scrapeTable("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
 wikipedia.set_lang("es")
 def obtenerPaginas(persona):
 	print "Relaciones Familiares: "
@@ -34,4 +36,4 @@ def imprimirLinks(url,persona):
 		
 
 
-obtenerPaginas("Alvaro Uribe")
+#obtenerPaginas("Alvaro Uribe")
