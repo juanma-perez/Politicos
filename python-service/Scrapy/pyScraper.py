@@ -23,12 +23,13 @@ def getTable(soup):
 
 #Scrapy of the imge in the infobix table
 def getTableImage(url):
-	return "https:" + getTable(getSoup(url)).find_all('tr')[1].find_all('img')[0]['src']
+	try:
+		return "https:" + getTable(getSoup(url)).find_all('tr')[1].find_all('img')[0]['src']
+	except Exception as error:
+		return "no disponible"
 		
 #Scrapy infobox (Proven for politicians) into json structure
 def politic_scrapeTable(url):
-	print "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-	print url
 	soup = getSoup(url)
 	table = soup.find('table', 'infobox')
 	table = getTable(soup)
