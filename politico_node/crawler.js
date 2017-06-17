@@ -7,7 +7,6 @@ var MongoClient = require('mongodb').MongoClient,
 var properties = require('./properties.json')
 var redis = require('redis')
 var mongo = require('mongodb');
-var neo4j = require('neo4j');
 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -19,7 +18,7 @@ app.get('/', function(request, response){ //Start the main page
 	console.log("Conecting to Node Server...")
 	console.log("Connection completed");
 	iniciar("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
-}).listen(properties.node.port+1)  //Mientras :3
+}).listen(properties.crawler.port)  //Mientras :3
 
 var links = []
 function iniciar(inicio){ 
@@ -27,7 +26,7 @@ function iniciar(inicio){
 	socket.emit('search politician', inicio)
 	socket.on('my response', function(msg) {
 		if(msg.Familia){
-    	console.log("La Familia es : ")
+    	console.log("Obteniendo información Familiar: ")
     	for (property in msg.Familia){
     		if (property.indexOf("links") !=-1){
     			msg.Familia[property].forEach(function(enlace){
@@ -37,6 +36,7 @@ function iniciar(inicio){
     						links.push(enlace.url)
     						iniciar(enlace.url)
     					}
+    					
 
     				}  
     				//pseudoCrawler(enlace.url)

@@ -13,6 +13,10 @@
 		"port":8082
 
 	},
+	"crawler":{
+		"port":8083
+
+	},
 	"neo4j":{
 		"host":"localhost",
 		"port":7474,
