@@ -14,16 +14,32 @@ app.set('views', __dirname + '/views'); //Renderizar vistas
 app.engine('html', require('ejs').renderFile); // Para procesar todo el HTML 
 app.use(express.static('static')); //Donde voy a guardar archivos estaticos (java script y sus librerias)
 
+
 app.get('/', function(request, response){ //Start the main page 
-	console.log("Conecting to Node Server...")
-	console.log("Connection completed");
-	iniciar("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
+    context = {}
+    context['mensaje'] = 'Hola mundo'
+	response.render('crawler.html',context);
+	//iniciar("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
 }).listen(properties.crawler.port)  //Mientras :3
 
-var links = []
+app.get('/search/personal_info', function(request, response){
+    socket.emit('search politician', request.query.search)
+    socket.on('my response', function(msg){
+        salida = {}
+        salida['Nombre'] = msg.Nombre
+        salida['Url'] = msg.Url
+        salida['Imagen']= msg.Imagen
+        salida['Familia']= msg.Familia
+        response.end(JSON.stringify(salida))
+    })
+})
+
+
 function iniciar(inicio){ 
-	context = {}
-	socket.emit('search politician', inicio)
+    var a = {}
+    getInfo(inicio, function(info){ a = info})
+    console.log(a)
+	/*socket.emit('search politician', inicio)
 	socket.on('my response', function(msg) {
 		if(msg.Familia){
     	console.log("Obteniendo información Familiar: ")
@@ -31,10 +47,10 @@ function iniciar(inicio){
     		if (property.indexOf("links") !=-1){
     			msg.Familia[property].forEach(function(enlace){
     				if (enlace.title != null){
-    					console.log(msg.Nombre +" ->  "+property.replace("- links","") + "  " +enlace.title + " " + enlace.url);
+                        salida[enlace.title]: enlace.url                            					
     					if (links.indexOf(enlace.url) == -1){
     						links.push(enlace.url)
-    						iniciar(enlace.url)
+    						iniciar(enlace.url,)
     					}
     					
 
@@ -55,5 +71,5 @@ function iniciar(inicio){
     		})
     	}
 
-	});
+	});*/
 }

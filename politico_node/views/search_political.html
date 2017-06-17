@@ -263,7 +263,7 @@
 		  
 		});
 
-		$.get( "/search/getsuggestion", { search: "<%= search %>" } )
+		$.get( "/search/personal_info", { search: "Juan Manuel Santos" } )
 			.done(function( data ) {
 				console.log(JSON.parse(data))
 
