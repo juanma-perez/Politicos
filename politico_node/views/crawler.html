@@ -25,37 +25,71 @@
 	</head>
 	<script>
 		var links = []
+		var links_to_search=[]
 		function buscarPersonaje(data){
-				var personaje = JSON.parse(data)
-				//$("#table_body").append('<p>' +'Imagen: '+ personaje.Imagen+' Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
-				$("#table_body").append('<p> Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
-				
-				for (property in personaje.Familia){
-    				if (property.indexOf("links") !=-1){
-    					personaje.Familia[property].forEach(function(enlace){
-	    					if (enlace.title != null){	
-	    						$("#table_body").append('<p>' + 'Parentesco: '+property.replace(' - links','')+' Nombre: '+enlace.title+'</p')
-	    						console.log(links)
-	    						if (links.indexOf(enlace.url) == -1){
-    								getPersonaje(enlace.url)    								
-    							}	                        	
-	    					}   					
-
-    					})  
-    				}
-    			}     		
+				     		
     	
 		}
-		function getPersonaje(url){			
-			$.get( "/search/personal_info", { search: url } )
+		function getPersonaje(links_to_search,cont ){
+
+			if(cont<links_to_search.length){
+
+			
+
+			$.get( "/search/personal_info", { search: links_to_search[cont] } )
 				.done(function( data ) {	
-					buscarPersonaje(data)
+					links.push(links_to_search[cont])
+
+					var personaje = JSON.parse(data)
+					//$("#table_body").append('<p>' +'Imagen: '+ personaje.Imagen+' Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
+					console.log(personaje)
+					$("#table_body").append('<p>&&&&&&&&&&&&&&&&& Nombre: '+personaje.Nombre+ ' Enlace: ' + personaje.Url+'</p')
+					
+					for (property in personaje.Familia){
+
+						console.log(property)
+						
+
+	    				if (property.indexOf("links") !=-1){
+
+	    					personaje.Familia[property].forEach(function(enlace){
+		    					if (enlace.title != null){	
+		    						$("#table_body").append('<p>' + 'Parentesco: '+property.replace(' - links','')+' Nombre: '+enlace.title+'</p')
+		    						
+
+		    						console.log(links.indexOf(enlace.url))
+		    						if (links.indexOf(enlace.url) == -1){
+
+		    							if (links_to_search.indexOf(enlace.url) == -1){
+		    								links_to_search.push(enlace.url) 
+		    							}
+	    								
+
+	    							}	                        	
+		    					}   					
+
+	    					})
+
+	    				}
+
+
+	    			}
+	    			getPersonaje(links_to_search, cont+1)
+	    			 
+
+					
+					
+
 			})
-				links.push(url)
+
+			}
+				
 		}
 		$(document).ready(function() {
 			
-			getPersonaje("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
+			
+			links_to_search.push("https://es.wikipedia.org/wiki/Juan_Manuel_Santos")
+			getPersonaje(links_to_search,0)
 
 		})
 		
